@@ -45,7 +45,7 @@ const MASTER_AREA = { vendors: 'vendors', vendDocReqs: 'vendors', customers: 'cu
   companies: 'admin', users: 'admin', approvalRules: 'admin' };
 const REPORT_AREA = { inv: 'invjnl', il: 'invjnl', bankled: 'bank', cashflow: 'bank', icrec: 'ic', consol: 'ic', audit: 'admin' };
 const ROUTE_AREA = { ersnew: 'req', ersreq: 'req', ersmy: 'req', ersq: 'req', ers: 'req', erscat: 'req', ersbud: 'req', ersacc: 'setup', rfq: 'rfq', asr: 'asr', nospa: 'nospa', vendacc: 'vendors',
-  bankimp: 'bank', cashpos: 'bank', applyent: 'bank', ic: 'ic', icpartners: 'ic', fxadjust: 'coa', fa: 'fa', facard: 'fa', bincontents: 'whse', bcimport: 'admin', mdcheck: 'admin', coverage: 'admin', roles: 'admin', settings: 'setup', bir: 'reports', apflow: 'admin', itemdesc: 'req' };
+  bankimp: 'bank', cashpos: 'bank', applyent: 'bank', ic: 'ic', icpartners: 'ic', fxadjust: 'coa', fa: 'fa', facard: 'fa', bincontents: 'whse', bcimport: 'admin', mdcheck: 'admin', coverage: 'admin', roles: 'admin', settings: 'setup', bir: 'reports', apflow: 'admin', itemdesc: 'req', vpacc: 'vendors', vpinbox: 'vendors' };
 // role names the program itself looks for: they cannot be renamed or deleted here
 const BUILTIN_ROLES = ['System Admin', 'Department Head', 'Purchasing Assistant', 'Supply Chain Specialist', 'Supply Chain & Admin Head', 'Warehouseman', 'AP Accounting Associate', 'General Accounting Supervisor',
   'Commercial Manager', 'President', 'Accounting Manager - Shared Service', 'BU Accounting Manager', 'G/L Accountant', 'Treasury Supervisor', 'Treasury Assistant Manager', 'Billing / Sales Associate',

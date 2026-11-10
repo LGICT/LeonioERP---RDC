@@ -4,7 +4,7 @@ const NAV = [
   ['Home', [['#/home', 'Role Center'], ['#/approvals', 'Requests to Approve', 'appr'], ['#/guide', 'Getting Started']]],
   ['Requisitions', [['#/ers', 'Dashboard'], ['#/ersnew/new', 'New Request'], ['#/ersmy', 'My Requests'], ['#/ersq', 'Requests to Process', 'ersq'], ['#/erscat', 'Item Catalog'], ['#/ersbud', 'Budget Status'], ['#/ersacc', 'Issuance Accounts']]],
   ['Purchasing', [['#/docs/PR', 'Purchase Requisitions'], ['#/rfq', 'Requests for Quotation (RFQ)', 'rfq'], ['#/docs/PQ', 'Purchase Quotes'], ['#/docs/PO', 'Purchase Orders'], ['#/asr', 'Service Acceptance (ASR)', 'asr'], ['#/docs/RR', 'Posted Purchase Receipts'],
-    ['#/docs/PI', 'Purchase Invoices'], ['#/docs/PRET', 'Purchase Credit Memos'], ['#/docs/PAY', 'Payment Journals'], ['#/list/vendors', 'Vendors'], ['#/vendacc', 'Vendor Accreditation', 'vacc'], ['#/list/vendDocReqs', 'Vendor Document Requirements']]],
+    ['#/docs/PI', 'Purchase Invoices'], ['#/docs/PRET', 'Purchase Credit Memos'], ['#/docs/PAY', 'Payment Journals'], ['#/list/vendors', 'Vendors'], ['#/vendacc', 'Vendor Accreditation', 'vacc'], ['#/list/vendDocReqs', 'Vendor Document Requirements'], ['#/vpinbox', 'Vendor Portal Inbox', 'vpin'], ['#/vpacc', 'Vendor Portal Accounts']]],
   ['Sales', [['#/nospa', 'Sales Contracts (NOSPA)'], ['#/docs/SO', 'Sales Orders'], ['#/docs/SI', 'Sales Invoices'], ['#/docs/SCM', 'Sales Credit Memos'], ['#/docs/CR', 'Cash Receipt Journals'], ['#/list/customers', 'Customers']]],
   ['Treasury', [['#/docs/PAY', 'Payment Journals'], ['#/docs/CR', 'Cash Receipt Journals'], ['#/docs/FT', 'Transfers of Funds'], ['#/cashpos', 'Daily Cash Position'], ['#/bankimp', 'Bank Statement Import', 'bkimp'], ['#/docs/BREC', 'Bank Acc. Reconciliations'],
     ['#/report/bankled', 'Bank Account Ledger'], ['#/report/cashflow', 'Cash Flow Forecast'], ['#/list/bankAccounts', 'Bank Accounts'],
@@ -112,6 +112,7 @@ function renderTopbar() {
   const vn = typeof vaBadgeCount === 'function' ? vaBadgeCount() : 0, bv = $('#nb-vacc'); if (bv) { bv.textContent = vn || ''; bv.style.display = vn ? '' : 'none'; }
   const an = typeof asrBadgeCount === 'function' ? asrBadgeCount() : 0, ba = $('#nb-asr'); if (ba) { ba.textContent = an || ''; ba.style.display = an ? '' : 'none'; }
   const kn = typeof bkBadgeCount === 'function' ? bkBadgeCount() : 0, bk = $('#nb-bkimp'); if (bk) { bk.textContent = kn || ''; bk.style.display = kn ? '' : 'none'; }
+  const pn = typeof vpBadgeCount === 'function' ? vpBadgeCount() : 0, bp = $('#nb-vpin'); if (bp) { bp.textContent = pn || ''; bp.style.display = pn ? '' : 'none'; }
   const rn = typeof rfqBadgeCount === 'function' ? rfqBadgeCount() : 0, br = $('#nb-rfq'); if (br) { br.textContent = rn || ''; br.style.display = rn ? '' : 'none'; }
   $('#co').innerHTML = optionsHtml(refOptions('companies'), S.company, false);
   $('#usr').innerHTML = optionsHtml(DB.users.map(u => [u.id, `${u.name}`]), S.userId, false);

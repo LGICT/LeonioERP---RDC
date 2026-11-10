@@ -316,3 +316,16 @@ nav#nav .nav-reset:hover { background: rgba(255,255,255,.12); color: #fff; }
 /* Item description builder */
 .idb-out { margin-top: 12px; padding: 10px 12px; border-radius: 10px; background: #f3f6fb; border: 1px solid #dde4ef; }
 .idb-desc { font-size: 15px; font-weight: 700; margin: 2px 0 4px; word-break: break-word; }
+/* Vendor portal (#/vp): no ERP menu or top bar */
+body.vp-mode aside.sidebar, body.vp-mode .topbar { display: none !important; }
+body.vp-mode .maincol { margin-left: 0 !important; width: 100% !important; }
+body.vp-mode #main { background: #f3f6fb; }
+.vp-wrap { max-width: 1100px; margin: 0 auto; padding: 16px; }
+.vp-head { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 10px; }
+.vp-brand { font-size: 18px; font-weight: 800; color: #0b2a5b; flex: 1; } .vp-brand span { font-weight: 500; color: #4a5a78; margin-left: 4px; }
+.vp-who { display: flex; flex-direction: column; text-align: right; }
+.vp-tabs { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 12px; border-bottom: 1px solid #d5dce8; }
+.vp-tabs a { padding: 9px 12px; border-radius: 9px 9px 0 0; color: #2a3a58; text-decoration: none; font-weight: 600; font-size: 13.5px; }
+.vp-tabs a.on { background: #fff; border: 1px solid #d5dce8; border-bottom-color: #fff; margin-bottom: -1px; color: var(--primary); }
+.vp-login { max-width: 400px; margin: 60px auto; }
+.vp-pay { border: 1px solid #e3e8f0; border-radius: 10px; padding: 10px; margin-bottom: 10px; }

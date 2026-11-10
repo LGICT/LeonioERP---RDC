@@ -433,6 +433,8 @@ async function pqMakePO() {
   let po;
   const ok = await commit(() => {
     const pq = dbDoc();
+    if (pq.status !== 'Approved') fail(`Quote ${pq.no} is ${pq.status}. Only an approved (awarded) quote can become a Purchase Order.`);
+    if (DB.docs.some(x => x.type === 'PO' && x.company === pq.company && x.pqNo === pq.no)) fail(`Quote ${pq.no} already has a Purchase Order.`);
     po = { id: uid(), type: 'PO', no: nextNo('PO', pq.company), company: pq.company, date: today(), status: 'Draft', vendor: pq.vendor, prNo: pq.prNo || '', pqNo: pq.no, dims: clone(pq.dims || {}),
       createdBy: curUser().id, createdAt: new Date().toISOString(), approvals: [], lines: pq.lines.map(l => ({ ...l, qtyReceived: 0, qtyInvoiced: 0 })) };
     for (const k of HDR_COPY) po[k] = pq[k];
