@@ -1,0 +1,174 @@
+<title>ERS vs ERP Comparison</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: ERS look — navy header band, summary tiles, then one card per area with a three-column comparison table */
+:root {
+  --primary: #1a56db; --primary-50: #eef3fe; --band-a: #0c2d63; --band-b: #081d42; --band-fg: #dbe5ff; --gold: #f59e0b;
+  --bg: #f4f6fb; --card: #ffffff; --text: #111827; --muted: #6b7280; --border: #e6eaf1; --soft: #f8fafc;
+  --green: #16a34a; --green-bg: #eaf7ee; --amber: #b45309; --amber-bg: #fff6e6; --violet: #7c3aed; --violet-bg: #f3edfe; --gray-bg: #f1f3f6; --red: #dc2626; --red-bg: #fdeeee;
+  --font: Inter, "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --primary: #7aa2ff; --primary-50: #15254a; --band-a: #0a1e45; --band-b: #06132d; --band-fg: #c7d4f5;
+  --bg: #0b1220; --card: #111a2e; --text: #e5e7eb; --muted: #94a3b8; --border: #1f2a44; --soft: #0f1729;
+  --green: #4ade80; --green-bg: #0f2a1d; --amber: #fbbf24; --amber-bg: #2d220d; --violet: #b794f6; --violet-bg: #231842; --gray-bg: #1a2338; --red: #f87171; --red-bg: #2e1414; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --primary: #7aa2ff; --primary-50: #15254a; --band-a: #0a1e45; --band-b: #06132d; --band-fg: #c7d4f5;
+  --bg: #0b1220; --card: #111a2e; --text: #e5e7eb; --muted: #94a3b8; --border: #1f2a44; --soft: #0f1729;
+  --green: #4ade80; --green-bg: #0f2a1d; --amber: #fbbf24; --amber-bg: #2d220d; --violet: #b794f6; --violet-bg: #231842; --gray-bg: #1a2338; --red: #f87171; --red-bg: #2e1414; color-scheme: dark }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 14px; line-height: 1.55; }
+.gut { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.inner { max-width: 1040px; margin: 0 auto; }
+header { background: linear-gradient(180deg, var(--band-a), var(--band-b)); color: var(--band-fg); padding-block: 28px 24px; }
+header .inner { display: grid; gap: 8px; }
+.brand { color: #fff; font-weight: 700; font-size: 13px; letter-spacing: .4px; text-transform: uppercase; display: flex; gap: 8px; align-items: center; }
+.brand i { width: 10px; height: 10px; border-radius: 3px; background: var(--gold); display: inline-block; }
+h1 { margin: 0; color: #fff; font-size: clamp(24px, 4vw, 30px); text-wrap: balance; }
+header p { margin: 0; max-width: 70ch; }
+main { padding-block: 22px 60px; }
+main .inner { display: grid; gap: 18px; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.tile { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; display: grid; gap: 2px; }
+.tile b { font-size: 24px; font-variant-numeric: tabular-nums; }
+.tile span { color: var(--muted); font-size: 12.5px; }
+section.card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; display: grid; gap: 10px; min-width: 0; }
+section.card h2 { margin: 0; font-size: 17px; text-wrap: balance; }
+section.card > p { margin: 0; color: var(--muted); font-size: 13px; max-width: 80ch; }
+.tw { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; min-width: 760px; }
+th { text-align: left; font-size: 12px; color: var(--muted); font-weight: 600; padding: 8px 10px; border-bottom: 1px solid var(--border); background: var(--soft); }
+td { padding: 9px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tr:last-child td { border-bottom: 0; }
+td:first-child { font-weight: 600; width: 26%; }
+td:nth-child(2), td:nth-child(3) { width: 30%; }
+.v { font-size: 12px; font-weight: 600; border-radius: 99px; padding: 2px 10px; white-space: nowrap; display: inline-block; }
+.adopt { background: var(--primary-50); color: var(--primary); }
+.part { background: var(--amber-bg); color: var(--amber); }
+.erp { background: var(--green-bg); color: var(--green); }
+.no { background: var(--red-bg); color: var(--red); }
+.listed { background: var(--gray-bg); color: var(--muted); }
+.note { font-size: 12.5px; color: var(--muted); margin-top: 4px; display: block; }
+ul { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+.legend { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; font-size: 13px; color: var(--muted); }
+</style>
+
+<header class="gut"><div class="inner">
+  <div class="brand"><i></i>Leonio ERP · ERS review</div>
+  <h1>ERS and ERP, screen by screen</h1>
+  <p>Every ERS screen, report tab, setting and shared behaviour, compared with ERP v0.8, so nothing useful is left behind. Reviewed 9 Nov 2026.</p>
+</div></header>
+
+<main class="gut"><div class="inner">
+  <div class="tiles">
+    <div class="tile"><b>55</b><span>ERS functions reviewed</span></div>
+    <div class="tile"><b>22</b><span>Adopt (not in the ERP yet)</span></div>
+    <div class="tile"><b>6</b><span>Partly in the ERP</span></div>
+    <div class="tile"><b>15</b><span>Already on the development list</span></div>
+    <div class="tile"><b>6</b><span>ERP already has it or does it better</span></div>
+    <div class="tile"><b>6</b><span>ERS limitations not to copy</span></div>
+  </div>
+  <div class="legend"><span class="v adopt">Adopt</span> new item added to the list · <span class="v part">Partly</span> ERP has some of it · <span class="v listed">On the list</span> already planned · <span class="v erp">ERP better</span> keep the ERP way · <span class="v no">Don't copy</span> an ERS limitation</div>
+
+  <section class="card"><h2>Reports (ERS has 7 report tabs)</h2>
+    <p>ERS reports share one filter bar (date range, department, status), show only what your role may see, and export to Excel/CSV. The ERP's reports are accounting reports (trial balance, financial statements, aging, inventory valuation); it has no requisition or approval reports yet.</p>
+    <div class="tw"><table><thead><tr><th>ERS</th><th>What it shows</th><th>ERP today</th><th>Verdict</th></tr></thead><tbody>
+      <tr><td>Summary</td><td>Total, approved and released requests with % of total; amount requested and released; monthly trend chart; requests-by-status chart; top 5 items; requests by department</td><td>Requisitions dashboard: 5 tiles, recent requests, issued this month by department. No period filter, no charts.</td><td><span class="v adopt">Adopt</span></td></tr>
+      <tr><td>Requests register</td><td>Every request in the period with requester, department, purpose, item count, total, priority, status; exportable</td><td>My Requests (own only) and Requests to Process; no register across everyone, no date or department filter</td><td><span class="v adopt">Adopt</span></td></tr>
+      <tr><td>Items</td><td>Times requested, total quantity, amount and % of total per item</td><td>Item Ledger Entries (movements), not demand analysis</td><td><span class="v adopt">Adopt</span></td></tr>
+      <tr><td>Departments</td><td>Requests, approved, rejected, <b>approval rate</b>, amount per department</td><td>Issued this month by department (amount only)</td><td><span class="v adopt">Adopt</span></td></tr>
+      <tr><td>Approvals</td><td>Per approver: approved, released, returned, rejected, and <b>average turnaround time</b></td><td>Nothing. The ERP stores who approved and when, so it can report this for every document type, not only requests.</td><td><span class="v adopt">Adopt</span><span class="note">High value: shows where approvals get stuck.</span></td></tr>
+      <tr><td>Budget</td><td>Per department: annual budget, consumed, committed, remaining, utilization, status</td><td>Budget Status per G/L account (with committed and status), not per department</td><td><span class="v part">Partly</span><span class="note">Needs budget by department (on the list).</span></td></tr>
+      <tr><td>Inventory</td><td>Stock, minimum stock, unit cost, stock value, status; items below minimum listed first</td><td>Inventory Valuation (value per item and location); no minimum stock or status</td><td><span class="v part">Partly</span><span class="note">Needs reorder level (on the list).</span></td></tr>
+      <tr><td>Report scope by role</td><td>Requester sees own requests, approver sees their department, Supply Chain and admin see all</td><td>Everyone sees everything</td><td><span class="v adopt">Adopt</span><span class="note">Part of permissions.</span></td></tr>
+      <tr><td>Export logged</td><td>Each export is written to the audit trail</td><td>Lists export to CSV; exports are not logged</td><td><span class="v adopt">Adopt</span></td></tr>
+    </tbody></table></div></section>
+
+  <section class="card"><h2>Dashboard</h2>
+    <div class="tw"><table><thead><tr><th>ERS</th><th>What it does</th><th>ERP today</th><th>Verdict</th></tr></thead><tbody>
+      <tr><td>Personal status tiles</td><td>My pending, approved, released, rejected; each opens the filtered list</td><td>My open requests, waiting for my approval, Supply Chain review, for release, issued this month</td><td><span class="v part">Partly</span><span class="note">Add rejected and released, and open the filtered list on click.</span></td></tr>
+      <tr><td>Monthly trend chart</td><td>Requests per month</td><td>None</td><td><span class="v adopt">Adopt</span></td></tr>
+      <tr><td>Requests by status chart</td><td>Donut of all statuses</td><td>None</td><td><span class="v adopt">Adopt</span></td></tr>
+      <tr><td>Budget utilization widget</td><td>Department consumed, committed, remaining</td><td>Separate Budget Status page</td><td><span class="v adopt">Adopt</span></td></tr>
+      <tr><td>Top requested items</td><td>Five most requested items</td><td>Quick-add uses the most requested items, but no widget</td><td><span class="v adopt">Adopt</span></td></tr>
+      <tr><td>Quick actions</td><td>Shortcuts to new request, catalog, reports</td><td>"+ New Request" button; Role Center has "Start a process"</td><td><span class="v erp">ERP fine</span></td></tr>
+    </tbody></table></div></section>
+
+  <section class="card"><h2>New Request</h2>
+    <div class="tw"><table><thead><tr><th>ERS</th><th>What it does</th><th>ERP today</th><th>Verdict</th></tr></thead><tbody>
+      <tr><td>Catalog search, quick add, quantity stepper, budget impact, workflow preview</td><td>Same design the ERP copied</td><td>Built in v0.7, with real stock per location and the expense account per line</td><td><span class="v erp">ERP better</span></td></tr>
+      <tr><td>"Add as a new item"</td><td>When search finds nothing, request a non-catalog item with name, category, unit and estimated cost</td><td>Only items already in the item list</td><td><span class="v listed">On the list</span><span class="note">"Request a new item"; should create a new item request for Supply Chain, not a free-text line.</span></td></tr>
+      <tr><td>Preferred brand and specifications per line</td><td>Optional brand and remarks on each requested item</td><td>None</td><td><span class="v adopt">Adopt</span><span class="note">Useful for spare parts (part no., model).</span></td></tr>
+      <tr><td>Submit confirmation</td><td>"Submit request?" before sending</td><td>Submits straight away</td><td><span class="v adopt">Adopt</span></td></tr>
+      <tr><td>Autosave</td><td>Setting to autosave the form</td><td>None</td><td><span class="v listed">On the list</span></td></tr>
+      <tr><td>Attachments</td><td>Settings for size and file types (upload itself not built in ERS)</td><td>None</td><td><span class="v listed">On the list</span></td></tr>
+    </tbody></table></div></section>
+
+  <section class="card"><h2>My Requests and Approvals</h2>
+    <div class="tw"><table><thead><tr><th>ERS</th><th>What it does</th><th>ERP today</th><th>Verdict</th></tr></thead><tbody>
+      <tr><td>Search and date filter</td><td>Search by request no., item or purpose; date range</td><td>Status filters with counts only</td><td><span class="v adopt">Adopt</span></td></tr>
+      <tr><td>Print request form with approval history</td><td>Printable request: items, totals and every approval step with date and remarks</td><td>None for requests</td><td><span class="v adopt">Adopt</span><span class="note">Replaces the paper MRF/MIF.</span></td></tr>
+      <tr><td>View history, cancel, duplicate</td><td>Per request</td><td>History panel, cancel, duplicate on the request page</td><td><span class="v erp">ERP has it</span></td></tr>
+      <tr><td>Pagination</td><td>10 per page</td><td>Long lists show everything</td><td><span class="v adopt">Adopt</span></td></tr>
+      <tr><td>Bulk approve</td><td>Tick several requests and approve them at once</td><td>One at a time</td><td><span class="v adopt">Adopt</span><span class="note">Keep it off for over-budget requests.</span></td></tr>
+      <tr><td>"Approved by me"</td><td>Count and list of actions I took</td><td>None</td><td><span class="v adopt">Adopt</span></td></tr>
+      <tr><td>Over-budget confirmation</td><td>"This request is over budget. Approve anyway?"</td><td>Shows an over-budget warning, but approval needs no confirmation</td><td><span class="v adopt">Adopt</span></td></tr>
+      <tr><td>Insufficient-stock warning to the approver</td><td>Warns when requested quantity is above stock</td><td>Stock shown at Supply Chain review, not to the approver</td><td><span class="v part">Partly</span></td></tr>
+      <tr><td>Request changes, remarks</td><td>Send back with a reason</td><td>Built</td><td><span class="v erp">ERP has it</span></td></tr>
+    </tbody></table></div></section>
+
+  <section class="card"><h2>Item Catalog and Budget Status</h2>
+    <div class="tw"><table><thead><tr><th>ERS</th><th>What it does</th><th>ERP today</th><th>Verdict</th></tr></thead><tbody>
+      <tr><td>Item details view</td><td>Click an item to see its details</td><td>Card shows name, code, category, stock, cost</td><td><span class="v adopt">Adopt</span><span class="note">Add stock by location, last purchase, open requests.</span></td></tr>
+      <tr><td>Export catalog</td><td>Catalog to Excel/CSV</td><td>Items list exports; the catalog page does not</td><td><span class="v part">Partly</span></td></tr>
+      <tr><td>Budget cards and health gauge</td><td>Annual, consumed, committed, remaining; health gauge</td><td>Table with meters and status per account</td><td><span class="v part">Partly</span></td></tr>
+      <tr><td>Budget trend</td><td>Cumulative % used through the year</td><td>None</td><td><span class="v adopt">Adopt</span></td></tr>
+      <tr><td>Breakdown by category</td><td>Budget per item category</td><td>Per G/L account (more accurate for accounting)</td><td><span class="v erp">ERP better</span></td></tr>
+      <tr><td>Recent budget impact</td><td>Open requests eating into the budget</td><td>Committed total only</td><td><span class="v adopt">Adopt</span></td></tr>
+    </tbody></table></div></section>
+
+  <section class="card"><h2>Settings (from the earlier review)</h2>
+    <p>All already added to the development list on 9 Nov 2026.</p>
+    <div class="tw"><table><thead><tr><th>ERS</th><th>What it does</th><th>ERP today</th><th>Verdict</th></tr></thead><tbody>
+      <tr><td>Company information and help contact</td><td>Phone, email, support contact in the sidebar</td><td>Name, legal name, TIN, address</td><td><span class="v listed">On the list</span></td></tr>
+      <tr><td>Behaviour switches</td><td>Cancel by requester, reason required, autosave, show budget</td><td>Fixed</td><td><span class="v listed">On the list</span></td></tr>
+      <tr><td>Numbering</td><td>Prefix and next number</td><td>Business Central No. Series (except requests and contracts)</td><td><span class="v listed">On the list</span></td></tr>
+      <tr><td>Display</td><td>Rows per page, landing page, dark theme</td><td>None</td><td><span class="v listed">On the list</span></td></tr>
+      <tr><td>Users</td><td>Employee no., Active / Inactive / Locked, deactivate</td><td>ID, name, email, roles, department, reports-to</td><td><span class="v listed">On the list</span></td></tr>
+      <tr><td>Departments and cost centers</td><td>Head of department; cost centers</td><td>DEPT dimension values</td><td><span class="v listed">On the list</span></td></tr>
+      <tr><td>Workflow templates</td><td>Named, draft / active, duplicate; Required / Optional / Automatic steps</td><td>Approval rules</td><td><span class="v listed">On the list</span></td></tr>
+      <tr><td>Item settings</td><td>Reorder level, preferred supplier, adjust stock with reason, import</td><td>Items from Business Central; adjustments by Item Journal</td><td><span class="v listed">On the list</span></td></tr>
+      <tr><td>Budget settings</td><td>By department or category, carry forward, owner, warn or block</td><td>Per G/L account, warn only</td><td><span class="v listed">On the list</span></td></tr>
+      <tr><td>Fiscal periods</td><td>Open or close each month</td><td>One posting date range</td><td><span class="v listed">On the list</span></td></tr>
+      <tr><td>Notifications</td><td>Bell with unread count, categories, per-user choices</td><td>Counts on the menu</td><td><span class="v listed">On the list</span></td></tr>
+      <tr><td>Audit trail</td><td>Filters and details</td><td>Change Log list</td><td><span class="v listed">On the list</span></td></tr>
+      <tr><td>Backup and restore</td><td>Download, restore, reset</td><td>Built, plus hourly server backups</td><td><span class="v erp">ERP has it</span></td></tr>
+    </tbody></table></div></section>
+
+  <section class="card"><h2>Don't copy from ERS</h2>
+    <ul>
+      <li><b>One stock figure per item.</b> The ERP keeps stock per location and bin, as Business Central does.</li>
+      <li><b>Stock that just goes down on release.</b> The ERP posts the issue to inventory and the G/L at cost, charged to department and equipment.</li>
+      <li><b>Budget at catalog price by category.</b> The ERP measures against real G/L actuals per account.</li>
+      <li><b>Data kept in one browser, and anyone can switch users.</b> Both systems need real logins and a shared database.</li>
+      <li><b>A single Standard workflow for every request.</b> The ERP already routes by superior, department head and amount.</li>
+      <li><b>Free-text "non-catalog" lines.</b> They can't post to inventory or the right account; a new-item request to Supply Chain is safer.</li>
+    </ul></section>
+
+  <section class="card"><h2>Added to the development list</h2>
+    <p>Items not already on the list.</p>
+    <ul>
+      <li>Requisition reports: summary, requests register, items, departments (with filters, role scope and logged export)</li>
+      <li>Approver performance report for all document types (counts and average turnaround)</li>
+      <li>Inventory status report (stock against minimum, below minimum first)</li>
+      <li>Department budget report, budget trend and recent budget impact</li>
+      <li>Requisition dashboard charts: personal tiles that open the filtered list, monthly trend, status mix, budget widget, top items</li>
+      <li>Request lines: preferred brand and specifications; submit confirmation</li>
+      <li>Search, date filter and pagination on request lists</li>
+      <li>Approvals: bulk approve, "approved by me", over-budget confirmation, stock warning for approvers</li>
+      <li>Printable request form with approval history</li>
+      <li>Item details view and catalog export</li>
+      <li>Data scope by role in dashboards and reports</li>
+    </ul></section>
+</div></main>

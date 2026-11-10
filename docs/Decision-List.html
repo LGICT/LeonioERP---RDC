@@ -1,0 +1,271 @@
+<title>Leonio ERP Decisions</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: ERS look (navy band, white cards, blue primary) — one column of decision cards grouped by area, with a sticky progress bar */
+:root {
+  --primary: #1a56db; --primary-50: #eef3fe; --band-a: #0c2d63; --band-b: #081d42; --band-fg: #dbe5ff; --gold: #f59e0b;
+  --bg: #f4f6fb; --card: #ffffff; --text: #111827; --muted: #6b7280; --border: #e6eaf1; --soft: #f8fafc;
+  --green: #16a34a; --green-bg: #eaf7ee; --amber: #b45309; --amber-bg: #fff6e6; --violet: #7c3aed; --violet-bg: #f3edfe;
+  --font: Inter, "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --primary: #7aa2ff; --primary-50: #15254a; --band-a: #0a1e45; --band-b: #06132d; --band-fg: #c7d4f5;
+  --bg: #0b1220; --card: #111a2e; --text: #e5e7eb; --muted: #94a3b8; --border: #1f2a44; --soft: #0f1729;
+  --green: #4ade80; --green-bg: #0f2a1d; --amber: #fbbf24; --amber-bg: #2d220d; --violet: #b794f6; --violet-bg: #231842; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --primary: #7aa2ff; --primary-50: #15254a; --band-a: #0a1e45; --band-b: #06132d; --band-fg: #c7d4f5;
+  --bg: #0b1220; --card: #111a2e; --text: #e5e7eb; --muted: #94a3b8; --border: #1f2a44; --soft: #0f1729;
+  --green: #4ade80; --green-bg: #0f2a1d; --amber: #fbbf24; --amber-bg: #2d220d; --violet: #b794f6; --violet-bg: #231842; color-scheme: dark }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 14px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+.gut { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.inner { max-width: 920px; margin: 0 auto; }
+header.band { background: linear-gradient(180deg, var(--band-a), var(--band-b)); color: var(--band-fg); padding-block: 28px 26px; }
+header.band .inner { display: grid; gap: 8px; }
+.brand { display: flex; gap: 10px; align-items: center; color: #fff; font-weight: 700; letter-spacing: .4px; font-size: 13px; text-transform: uppercase; }
+.brand svg { width: 22px; height: 22px; color: var(--gold); }
+h1 { margin: 0; color: #fff; font-size: clamp(24px, 4vw, 30px); text-wrap: balance; }
+header p { margin: 0; max-width: 64ch; }
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--card); border-bottom: 1px solid var(--border); padding-block: 10px; }
+.bar .inner { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: space-between; }
+.prog { display: flex; align-items: center; gap: 10px; min-width: 220px; flex: 1; }
+.track { flex: 1; height: 8px; border-radius: 99px; background: var(--primary-50); overflow: hidden; max-width: 260px; }
+.fill { height: 100%; background: var(--primary); width: 0; transition: width .25s; }
+.prog b { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn { font: inherit; font-weight: 600; font-size: 13px; border-radius: 10px; padding: 8px 14px; border: 1px solid var(--border); background: var(--card); color: var(--text); cursor: pointer; }
+.btn.primary { background: var(--primary); border-color: var(--primary); color: #fff; }
+:root[data-theme="dark"] .btn.primary { color: #0b1220; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn.primary { color: #0b1220; } }
+.btn:focus-visible, .opt input:focus-visible + span, textarea:focus-visible, input[type=text]:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+main { padding-block: 24px 64px; }
+main .inner { display: grid; gap: 28px; }
+.group { display: grid; gap: 12px; }
+.group h2 { margin: 0; font-size: 13px; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; display: grid; gap: 10px; box-shadow: 0 1px 2px rgba(16,24,40,.04); min-width: 0; }
+.card.done { border-color: color-mix(in srgb, var(--green) 45%, var(--border)); }
+.qh { display: flex; gap: 12px; align-items: flex-start; }
+.qn { flex: none; width: 28px; height: 28px; border-radius: 8px; background: var(--primary-50); color: var(--primary); font-weight: 700; font-size: 13px; display: grid; place-items: center; font-variant-numeric: tabular-nums; }
+.card.done .qn { background: var(--green-bg); color: var(--green); }
+.qt { font-weight: 600; font-size: 15px; }
+.why { color: var(--muted); font-size: 13px; }
+.opts { display: grid; gap: 8px; }
+.opt { display: block; cursor: pointer; }
+.opt input { position: absolute; opacity: 0; pointer-events: none; }
+.opt span { display: grid; gap: 2px; border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; background: var(--soft); }
+.opt input:checked + span { border-color: var(--primary); background: var(--primary-50); }
+.opt strong { font-weight: 600; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.opt small { color: var(--muted); font-size: 12.5px; }
+.rec { font-size: 11px; font-weight: 600; color: var(--green); background: var(--green-bg); border-radius: 99px; padding: 1px 8px; }
+.extra { display: grid; gap: 4px; font-size: 13px; }
+.extra input, textarea { font: inherit; font-size: 13px; color: var(--text); background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; width: 100%; }
+textarea { min-height: 38px; resize: vertical; }
+.others { display: grid; gap: 10px; }
+.other { background: var(--amber-bg); border-radius: 12px; padding: 12px 16px; display: grid; gap: 2px; }
+.other b { color: var(--amber); }
+.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(20px + env(safe-area-inset-bottom, 0px)); background: var(--text); color: var(--card); padding: 10px 16px; border-radius: 10px; font-weight: 500; }
+.out { display: grid; gap: 8px; }
+.out textarea { min-height: 220px; font-family: Consolas, "Courier New", monospace; font-size: 12px; }
+@media (prefers-reduced-motion: reduce) { .fill { transition: none; } }
+</style>
+
+<header class="band gut">
+  <div class="inner">
+    <div class="brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Leonio ERP</div>
+    <h1>Decisions to build the company ERP</h1>
+    <p>My recommendation is already selected on each one. Change any you disagree with and add notes. Then press <b>Copy my decisions</b> and paste the result in our chat. Your choices stay saved in this browser.</p>
+  </div>
+</header>
+
+<div class="bar gut">
+  <div class="inner">
+    <div class="prog"><div class="track"><div class="fill" id="fill"></div></div><b id="cnt">0 of 0 confirmed</b></div>
+    <div class="btns">
+      <button class="btn" id="b-reset" type="button">Reset to my recommendations</button>
+      <button class="btn primary" id="b-copy" type="button">Copy my decisions</button>
+    </div>
+  </div>
+</div>
+
+<main class="gut">
+  <div class="inner" id="root"></div>
+</main>
+
+<script>
+(function () {
+  var KEY = 'leonio.decisions.v1';
+  var D = [
+    { g: 'Direction', items: [
+      { id: 'platform', q: 'Which system becomes the company ERP?', why: 'Two ERP projects aim at the same goal. One codebase saves cost and confusion.', o: [
+        ['Our ERP + your ERS', 'Keep the tested Business Central accounting; rebuild LG-ERP\'s good Procure-to-Pay ideas inside it.', 1],
+        ['LG-ERP (Luis)', 'Has logins and a database, but must add accounting, inventory costing, sales, treasury, intercompany, FX, fixed assets, and fix its security findings.'],
+        ['Run both, connected', 'LG-ERP for Procure-to-Pay, our ERP for accounting; needs an interface between them.'] ] },
+      { id: 'lgerp', q: 'What happens to Luis\'s LG-ERP work?', why: 'Avoid two teams building the same screens.', o: [
+        ['Use it as a design reference; pause new P2P building', 'Its vendor accreditation, RFQ with technical review, service acceptance and 3-way match get copied into the ERP.', 1],
+        ['Keep building it in parallel', 'Duplicate effort until a final choice is made.'] ] },
+      { id: 'ers', q: 'What role does your ERS play?', why: 'ERS already does material requests and issuance, today the biggest gap.', o: [
+        ['Becomes the requisition module of the ERP', 'Same items, departments, users and budgets; releases post to inventory; shortages become Purchase Requisitions.', 1],
+        ['Stays a separate app, connected', 'Two systems to maintain and keep in sync.'],
+        ['Retire it; use the ERP\'s Purchase Requisition only', 'Loses the friendly requestor screens.'] ] },
+      { id: 'ui', q: 'Which look should the ERP use?', why: 'You prefer the ERS design.', o: [
+        ['ERS look on every screen; compact tables for accounting', 'Same sidebar, cards, colors and badges; journals and ledgers show 30–50 lines at once.', 1],
+        ['ERS look only for requestor and approver screens', 'Accounting keeps the current Business Central style.'],
+        ['Keep the current ERP look', ''] ] },
+      { id: 'pics', q: 'Item pictures', why: 'ERS shows a category icon per item. Real photos need someone to take them.', o: [
+        ['Category icons for all items, plus photo upload where useful', 'Start with fast-moving spare parts; items without a photo show their category icon.', 1],
+        ['Category icons only', ''],
+        ['Photos required for every item', 'Thousands of items; slow to complete.'] ] },
+      { id: 'pilot', q: 'Which company goes live first?', why: 'A pilot in one company limits the risk.', o: [
+        ['LAMI (mine site)', 'Most issuance, fuel and ore movement happen here, so it gains the most.', 1],
+        ['ADMIN (head office)', 'Simpler; fewer warehouse transactions.'],
+        ['All companies at once', 'Highest risk.'] ], x: 'Target go-live date' } ] },
+    { g: 'Procure-to-Pay', items: [
+      { id: 'pi', q: 'Purchase Invoice approval levels', why: 'Current documents say 2 levels; the 2021 matrix says 3.', o: [
+        ['2 levels, plus a 3rd above an amount', 'Accounting Shared Supervisor, then Manager; CFO above the amount.', 1],
+        ['Always 3 levels (2021 matrix)', ''],
+        ['Always 2 levels', ''] ], x: 'Amount for the 3rd level (₱)', xv: '500,000' },
+      { id: 'po', q: 'PO approval and CLG\'s wet signature', why: 'Wet signatures slow the PO and leave no trail in the system.', o: [
+        ['SC Manager, then SC VP; CLG approves electronically', '', 1],
+        ['Keep CLG\'s wet signature on the printed PO', ''] ] },
+      { id: 'canvass', q: 'Canvass / RFQ rules', why: 'Needed to build the RFQ with several vendors.', o: [
+        ['3 quotes above an amount; technical review for equipment and spare parts', '', 1],
+        ['3 quotes for every purchase', ''],
+        ['Supply Chain decides case by case', ''] ], x: 'Amount that needs 3 quotes (₱)', xv: '50,000' },
+      { id: 'accr', q: 'Vendor accreditation', why: 'LG-ERP has the design; our ERP has only the vendor card.', o: [
+        ['Required before a vendor can receive a PO, with document expiry reminders', '', 1],
+        ['Recorded but not enforced', ''] ] },
+      { id: 'bank', q: 'Changes to vendor/customer bank details and payment terms', why: 'A common fraud risk.', o: [
+        ['Accounting Shared Manager approves; only System Admin edits', 'Same as your current Cash Management process.', 1],
+        ['Treasury Manager approves', ''] ] },
+      { id: 'adv', q: 'Advances to suppliers', why: 'Today the netting against the final invoice is not defined.', o: [
+        ['Prepayment on the PO, netted automatically on the final invoice', '', 1],
+        ['Keep the separate "Advances to Supplier" account', ''] ] },
+      { id: 'ret', q: 'Purchase returns after 7 days', why: 'Your rule says returns happen within 7 days.', o: [
+        ['Warn but allow with a reason', '', 1],
+        ['Block after 7 days', ''] ] } ] },
+    { g: 'Inventory', items: [
+      { id: 'issue', q: 'Material issuance (MRF/MIF) in the ERP', why: 'Today it is only in Excel, so the books overstate stock.', o: [
+        ['Yes, through ERS; stop the Excel tracker', 'Each issue is charged to department, cost center and equipment.', 1],
+        ['Not yet', ''] ], x: 'Start date' },
+      { id: 'fuel', q: 'Fuel', why: 'A large cost that sits in Excel today.', o: [
+        ['Issue per equipment, daily tank reading, reorder alert at 80,000 L; invoice sales to LLRI/LAMI as intercompany', '', 1],
+        ['Keep the Excel Daily Fuel Monitoring for now', ''] ] },
+      { id: 'toy', q: 'Non-commercial (TOY) ore', why: 'It exists physically but not in the books.', o: [
+        ['Track the quantity at zero cost', 'Cost is added when it is reclassified to commercial.', 1],
+        ['Keep it outside the ERP', ''] ] },
+      { id: 'orecost', q: 'Ore extraction costing', why: 'Today inventory value is entered as a Purchase Invoice.', o: [
+        ['Keep the Purchase Invoice method for now', 'Revisit after go-live.', 1],
+        ['Use a production output journal', 'More accurate; needs costing rules from Accounting.'] ] },
+      { id: 'transfer', q: 'Lambert/Alabang to mine transfers', why: 'Today there is no transfer in Business Central.', o: [
+        ['Transfer Orders; CPD-SCW-003-02 is the controlling document', '', 1],
+        ['Transfer Orders; CPD-SCW-002-03 is the controlling document', ''] ] } ] },
+    { g: 'Order-to-Cash', items: [
+      { id: 'nospa', q: 'NOSPA (sales contract) in the ERP', why: 'Its terms are retyped for every invoice today.', o: [
+        ['Yes: price, grade, volume, laycan, shipment no., deposit schedule', '', 1],
+        ['No, keep it in email and Word', ''] ] },
+      { id: 'dep', q: 'Deposit 1, Deposit 2 and Provisional invoices', why: 'Deposits are invisible until collected.', o: [
+        ['Prepayment invoices generated from the contract, approved in the ERP', '', 1],
+        ['Keep pro forma invoices outside the ERP', ''] ] },
+      { id: 'wmt', q: 'The 50 WMT limit per sales invoice', why: 'It may be a Business Central workaround.', o: [
+        ['Don\'t copy it unless someone shows it is a real rule', '', 1],
+        ['Keep the limit', ''] ] },
+      { id: 'scrap', q: 'Scrap, obsolete material and asset sales', why: 'Cash today is not tied to any sale or asset.', o: [
+        ['Always a sales invoice; asset sales as a fixed asset disposal', '', 1],
+        ['Keep the current deposit-slip process', ''] ] } ] },
+    { g: 'Cash Management', items: [
+      { id: 'cpr', q: 'Cash Position Report', why: 'Kept in Excel today.', o: [
+        ['Daily Cash Position report in the ERP replaces the Excel file', '', 1],
+        ['Keep the Excel file', ''] ] },
+      { id: 'stmt', q: 'Bank statement import', why: 'Payments are confirmed by phone today.', o: [
+        ['Import CSV statements and match automatically', '', 1],
+        ['Keep manual bank reconciliation', ''] ], x: 'Which banks first?' },
+      { id: 'or', q: 'Official receipts and invoices printed by the ERP', why: 'Needs BIR registration of the system.', o: [
+        ['Not until the BIR registration is done', 'Keep the current receipts meanwhile.', 1],
+        ['Start the BIR registration now', ''] ] } ] },
+    { g: 'Build order', items: [
+      { id: 'order', q: 'What should I build first?', why: 'One at a time, each tested before the next.', o: [
+        ['ERS + Material Issue → Sales Contract and deposits → Vendor accreditation and bank-change approval → RFQ → Service acceptance → Cash Position and bank import → Logins and shared database', '', 1],
+        ['Logins and shared database first, then the rest', 'Longer before you see new features.'] ] } ] }
+  ];
+  var OTHERS = [
+    ['Tax adviser', 'BIR registration needed before the ERP prints official receipts and invoices.'],
+    ['ICT', 'Where to host the ERP (company server or cloud), company sign-in (for example Microsoft 365), backups.'],
+    ['Richard Coles', 'Missing processes: General Ledger, Fixed Assets, CPD-SC-001 (scrap bidding), CPD-HR-001-01 (NOSPA approval), Land and Tankering.'],
+    ['Warehouse, Accounting, Treasury', 'Sample forms: PR, MRF/MIF, WRR, canvass sheet, cheque voucher, official receipt, pro forma invoice, NOSPA, one bank statement CSV per bank.']
+  ];
+
+  var state = {};
+  try { state = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { state = {}; }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  var all = []; D.forEach(function (g) { g.items.forEach(function (it) { all.push(it); }); });
+  function recIdx(it) { for (var i = 0; i < it.o.length; i++) if (it.o[i][2]) return i; return 0; }
+  function cur(it) { var s = state[it.id] || {}; return { c: s.c == null ? recIdx(it) : s.c, x: s.x == null ? (it.xv || '') : s.x, n: s.n || '', ok: !!s.ok }; }
+
+  function render() {
+    var n = 0, html = '';
+    D.forEach(function (g) {
+      html += '<section class="group"><h2>' + esc(g.g) + '</h2>';
+      g.items.forEach(function (it) {
+        n++; var s = cur(it);
+        html += '<div class="card' + (s.ok ? ' done' : '') + '" id="c-' + it.id + '"><div class="qh"><span class="qn">' + n + '</span><div><div class="qt">' + esc(it.q) + '</div><div class="why">' + esc(it.why) + '</div></div></div><div class="opts" role="radiogroup" aria-label="' + esc(it.q) + '">';
+        it.o.forEach(function (o, i) {
+          html += '<label class="opt"><input type="radio" id="r-' + it.id + '-' + i + '" name="' + it.id + '" value="' + i + '"' + (s.c === i ? ' checked' : '') + '><span><strong>' + esc(o[0]) + (o[2] ? ' <em class="rec">Recommended</em>' : '') + '</strong>' + (o[1] ? '<small>' + esc(o[1]) + '</small>' : '') + '</span></label>';
+        });
+        html += '</div>';
+        if (it.x) html += '<label class="extra">' + esc(it.x) + '<input type="text" id="x-' + it.id + '" data-id="' + it.id + '" value="' + esc(s.x) + '"></label>';
+        html += '<label class="extra">Notes (optional)<textarea id="n-' + it.id + '" data-id="' + it.id + '" rows="1">' + esc(s.n) + '</textarea></label>';
+        html += '<label class="extra" style="display:flex;gap:8px;align-items:center;cursor:pointer"><input type="checkbox" id="ok-' + it.id + '" data-id="' + it.id + '"' + (s.ok ? ' checked' : '') + ' style="width:auto">I confirm this decision</label></div>';
+      });
+      html += '</section>';
+    });
+    html += '<section class="group"><h2>Need from other people (not your decision)</h2><div class="others">' + OTHERS.map(function (o) { return '<div class="other"><b>' + esc(o[0]) + '</b><span>' + esc(o[1]) + '</span></div>'; }).join('') + '</div></section>';
+    html += '<section class="group out" id="outbox" hidden><h2>Your decisions (copy and paste into the chat)</h2><textarea id="outtext" readonly></textarea></section>';
+    document.getElementById('root').innerHTML = html;
+    progress();
+  }
+  function progress() {
+    var ok = all.filter(function (it) { return cur(it).ok; }).length;
+    document.getElementById('cnt').textContent = ok + ' of ' + all.length + ' confirmed';
+    document.getElementById('fill').style.width = (ok / all.length * 100) + '%';
+  }
+  function upd(id, k, v) { state[id] = state[id] || {}; state[id][k] = v; save(); }
+  var root = document.getElementById('root');
+  root.addEventListener('change', function (e) {
+    var t = e.target;
+    if (t.type === 'radio') { upd(t.name, 'c', Number(t.value)); upd(t.name, 'ok', true); var cb = document.getElementById('ok-' + t.name); if (cb) cb.checked = true; mark(t.name); }
+    else if (t.type === 'checkbox') { upd(t.dataset.id, 'ok', t.checked); mark(t.dataset.id); }
+  });
+  root.addEventListener('input', function (e) {
+    var t = e.target;
+    if (t.id.indexOf('x-') === 0) upd(t.dataset.id, 'x', t.value);
+    if (t.id.indexOf('n-') === 0) upd(t.dataset.id, 'n', t.value);
+  });
+  function mark(id) { var c = document.getElementById('c-' + id); var s = state[id] || {}; if (c) c.classList.toggle('done', !!s.ok); progress(); }
+
+  function summary() {
+    var lines = ['LEONIO ERP DECISIONS'], n = 0;
+    D.forEach(function (g) {
+      lines.push('', g.g.toUpperCase());
+      g.items.forEach(function (it) {
+        n++; var s = cur(it), o = it.o[s.c];
+        lines.push(n + '. ' + it.q + ': ' + o[0] + (o[2] ? '' : ' (changed from recommendation)') + (s.ok ? '' : ' [not yet confirmed]'));
+        if (it.x && s.x) lines.push('   ' + it.x + ': ' + s.x);
+        if (s.n) lines.push('   Note: ' + s.n);
+      });
+    });
+    return lines.join('\n');
+  }
+  function toast(msg) { var t = document.createElement('div'); t.className = 'toast'; t.setAttribute('role', 'status'); t.textContent = msg; document.body.appendChild(t); setTimeout(function () { t.remove(); }, 2600); }
+  document.getElementById('b-copy').addEventListener('click', function () {
+    var txt = summary(), box = document.getElementById('outbox'), ta = document.getElementById('outtext');
+    ta.value = txt; box.hidden = false;
+    var done = function () { toast('Copied. Paste it into the chat.'); };
+    var fallback = function () { box.scrollIntoView({ block: 'center' }); ta.focus(); ta.select(); toast('Select all the text below and copy it.'); };
+    try { navigator.clipboard.writeText(txt).then(done, fallback); } catch (e) { fallback(); }
+  });
+  document.getElementById('b-reset').addEventListener('click', function () { state = {}; save(); render(); toast('Reset to my recommendations.'); });
+  render();
+})();
+</script>

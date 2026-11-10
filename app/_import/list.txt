@@ -1,0 +1,3 @@
+LAND: ["f01.xlsx","f02.xlsx","f03.xlsx","f04.xlsx","f05.xlsx","f06.xlsx","f07.xlsx","f08.xlsx","f09.xlsx","f10.xlsx","f11.xlsx","f12.xlsx","f13.xlsx","f14.xlsx"]
+MINING: ["f01.xlsx","f02.xlsx","f03.xlsx","f04.xlsx","f05.xlsx","f06.xlsx","f07.xlsx","f08.xlsx","f09.xlsx","f10.xlsx","f11.xlsx","f12.xlsx","f13.xlsx","f14.xlsx","f15.xlsx","f16.xlsx","f17.xlsx"]
+TANK: ["f01.xlsx","f02.xlsx","f03.xlsx","f04.xlsx","f05.xlsx","f06.xlsx","f07.xlsx","f08.xlsx","f09.xlsx","f10.xlsx","f11.xlsx","f12.xlsx","f13.xlsx","f14.xlsx","f15.xlsx","f16.xlsx"]

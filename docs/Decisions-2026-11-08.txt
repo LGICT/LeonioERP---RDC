@@ -1,0 +1,42 @@
+LEONIO ERP DECISIONS (decided by the project owner, 8 Nov 2026)
+
+DIRECTION
+1. Company ERP: Our ERP + ERS
+2. Luis's LG-ERP: design reference; pause new P2P building
+3. ERS: becomes the requisition module of the ERP
+4. Look: ERS look on every screen; compact tables for accounting
+5. Item pictures: category icons for all items, plus photo upload where useful
+6. First company to go live: LAMI (mine site)
+
+PROCURE-TO-PAY
+7. Purchase Invoice approval: 2 levels, plus a 3rd above PHP 500,000
+   Note: there must be a facility to update the approvers, per amount or per hierarchy
+8. PO approval: SC Manager, then SC VP; CLG approves electronically
+9. Canvass/RFQ: 3 quotes above PHP 50,000; technical review for equipment and spare parts
+10. Vendor accreditation: required before a vendor can receive a PO, with document expiry reminders
+11. Vendor/customer bank details and payment terms changes: Supply Chain and its heads update;
+    Accounting Shared Services checks; Treasury does final checking and approves
+12. Advances to suppliers: keep the separate "Advances to Supplier" account
+13. Purchase returns after 7 days: warn but allow with a reason
+
+INVENTORY
+14. Material issuance (MRF/MIF): through ERS in the ERP; stop the Excel tracker
+15. Fuel: issue per equipment, daily tank reading, reorder alert at 80,000 L; sales to LLRI/LAMI as intercompany
+16. Non-commercial (TOY) ore: track quantity at zero cost
+17. Ore extraction costing: keep the Purchase Invoice method for now
+18. Lambert/Alabang to mine: Transfer Orders; CPD-SCW-003-02 is the controlling document
+
+ORDER-TO-CASH
+19. NOSPA in the ERP: price, grade, volume, laycan, shipment no., deposit schedule
+20. Deposit 1, Deposit 2, Provisional: prepayment invoices generated from the contract, approved in the ERP
+21. 50 WMT limit: do not copy unless shown to be a real rule
+22. Scrap/obsolete/asset sales: always a sales invoice; asset sales as fixed asset disposal
+
+CASH MANAGEMENT
+23. Daily Cash Position report in the ERP replaces the Excel file
+24. Import CSV bank statements and match automatically
+25. Official receipts/invoices from the ERP: not until BIR registration is done
+
+BUILD ORDER
+26. ERS + Material Issue -> Sales Contract and deposits -> Vendor accreditation and bank-change approval
+    -> RFQ -> Service acceptance -> Cash Position and bank import -> Logins and shared database

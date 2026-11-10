@@ -1,0 +1,415 @@
+<title>Leonio ERP Procure-to-Pay</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a technical manual. Left table of contents on wide screens, one reading column; each module is a numbered chapter (LEO-P2P-0x) like the LUIS-0x pages. */
+:root {
+  --bg: #f6f7f9; --paper: #ffffff; --ink: #172033; --muted: #5b667a; --line: #dfe3ea;
+  --navy: #1e3a5e; --accent: #1f5fbf; --ok: #1d7a46; --warn: #a15c00; --plan: #6b7280; --code-bg: #eef1f6;
+  --sans: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif; --mono: "IBM Plex Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #10151f; --paper: #161d2a; --ink: #e6eaf2; --muted: #9aa5b8; --line: #2a3446; --navy: #9cc0ff; --accent: #7fb0ff; --ok: #5fd08f; --warn: #f0b45a; --plan: #9aa3b2; --code-bg: #1f2838; color-scheme: dark } }
+:root[data-theme="dark"] { --bg: #10151f; --paper: #161d2a; --ink: #e6eaf2; --muted: #9aa5b8; --line: #2a3446; --navy: #9cc0ff; --accent: #7fb0ff; --ok: #5fd08f; --warn: #f0b45a; --plan: #9aa3b2; --code-bg: #1f2838; color-scheme: dark }
+* { box-sizing: border-box }
+body { background: var(--bg); color: var(--ink); font: 15px/1.6 var(--sans); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)) }
+.wrap { max-width: 1180px; margin: 0 auto; display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 32px; padding-block: 28px 60px }
+@media (max-width: 900px) { .wrap { grid-template-columns: minmax(0, 1fr) } nav.toc { position: static !important; max-height: none !important } }
+nav.toc { position: sticky; top: calc(16px + env(safe-area-inset-top, 0px)); align-self: start; max-height: calc(100vh - 32px); overflow: auto; font-size: 13.5px }
+nav.toc b { display: block; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px }
+nav.toc a { display: block; padding: 4px 8px; border-radius: 6px; color: var(--ink); text-decoration: none }
+nav.toc a:hover, nav.toc a:focus-visible { background: var(--code-bg); outline: none }
+nav.toc a code { color: var(--muted); font-size: 11.5px }
+main { min-width: 0 }
+header.doc { border-bottom: 2px solid var(--navy); padding-bottom: 14px; margin-bottom: 8px }
+header.doc .kicker { font: 500 12px var(--mono); color: var(--muted); letter-spacing: .04em }
+h1 { font-size: 30px; line-height: 1.2; margin: 6px 0 8px; text-wrap: balance; color: var(--navy) }
+h2 { font-size: 23px; margin: 0; text-wrap: balance; color: var(--navy) }
+h3 { font-size: 16px; margin: 26px 0 8px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted) }
+p { max-width: 75ch; margin: 8px 0 }
+section.mod { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 22px 26px; margin-top: 26px; scroll-margin-top: 16px }
+@media (max-width: 600px) { section.mod { padding: 16px } }
+.modhead { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: baseline; border-bottom: 1px solid var(--line); padding-bottom: 10px }
+.modhead code { font: 500 13px var(--mono); color: var(--muted) }
+.summary { background: var(--code-bg); border-radius: 8px; padding: 12px 14px; margin-top: 12px }
+.tw { overflow-x: auto; margin: 8px 0 }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; min-width: 620px }
+th, td { text-align: left; vertical-align: top; padding: 7px 9px; border-bottom: 1px solid var(--line) }
+th { font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); background: var(--code-bg) }
+td.id, td.st { white-space: nowrap; font-family: var(--mono); font-size: 12.5px }
+td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap }
+.ok { color: var(--ok); font-weight: 600 } .part { color: var(--warn); font-weight: 600 } .plan { color: var(--plan); font-weight: 600 }
+code, .mono { font-family: var(--mono); font-size: .92em }
+.us { border-left: 3px solid var(--line); padding: 2px 0 2px 14px; margin: 14px 0 }
+.us b.t { display: block } .us .as { color: var(--muted); font-style: italic; margin: 2px 0 4px }
+.us ul, ul.plain { margin: 4px 0; padding-left: 20px } .us li, ul.plain li { margin: 3px 0 }
+figure { margin: 12px 0; } figure img { display: block; max-width: 100%; border: 1px solid var(--line); border-radius: 8px }
+figcaption { font-size: 12.5px; color: var(--muted); margin-top: 4px; font-family: var(--mono) }
+.shots { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 14px }
+.shots figure { margin: 0; min-width: 0 }
+pre.mermaid { background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 12px; overflow-x: auto; margin: 8px 0 }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--muted) }
+.gap li { margin: 4px 0 }
+.flow { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 13px; margin: 10px 0 }
+.flow span { background: var(--code-bg); border: 1px solid var(--line); border-radius: 6px; padding: 4px 8px }
+.flow i { color: var(--muted); font-style: normal }
+a { color: var(--accent) }
+</style>
+
+<div class="wrap">
+<nav class="toc" aria-label="Contents">
+  <b>Procure-to-Pay</b>
+  <a href="#p2p-00"><code>P2P-00</code> Overview</a>
+  <a href="#p2p-01"><code>P2P-01</code> Requisitions</a>
+  <a href="#p2p-02"><code>P2P-02</code> RFQ, quotes, QAR</a>
+  <a href="#p2p-03"><code>P2P-03</code> Purchase orders</a>
+  <a href="#p2p-04"><code>P2P-04</code> Goods receipt</a>
+  <a href="#p2p-05"><code>P2P-05</code> Service acceptance</a>
+  <a href="#p2p-06"><code>P2P-06</code> Purchase invoices</a>
+  <a href="#p2p-07"><code>P2P-07</code> Payments</a>
+  <a href="#p2p-08"><code>P2P-08</code> Vendors and accreditation</a>
+  <a href="#p2p-99"><code>P2P-99</code> Open items</a>
+</nav>
+<main>
+<header class="doc">
+  <div class="kicker">LEONIO ERP · DOCUMENTATION · PROCURE-TO-PAY · v0.17 · 9 Nov 2026</div>
+  <h1>Leonio ERP – Procure-to-Pay</h1>
+  <p>How the ERP handles buying, from an employee's request to the paid check. One chapter per module, in the same form as the LG-ERP pages: summary, screens, function list, user stories with the actual rules, status flow, accounting entries, and what is not built yet. Screens were captured from the running ERP (company LAMI, sample transactions PR-00004 to JPA00002).</p>
+  <div class="legend"><span><span class="ok">✔ Built</span> works and tested</span><span><span class="part">◐ Partial</span> works with limits noted</span><span><span class="plan">○ Planned</span> in the backlog</span><span>Roles: the permission area and action in Roles &amp; Permissions (V view, C create, D delete, A approve, P post)</span></div>
+</header>
+
+<!-- ============ P2P-00 ============ -->
+<section class="mod" id="p2p-00">
+  <div class="modhead"><code>LEO-P2P-00</code><h2>Overview: the whole chain</h2></div>
+  <div class="summary"><b>Summary:</b> A purchase moves through eight modules. Each step creates its own document with its own number series, approval trail and history, and links to the documents before and after it. Only three steps post to the books: the purchase invoice, the payment and the bank reconciliation. The goods receipt updates stock at expected cost without a G/L entry, as in Business Central.</div>
+  <div class="flow"><span>New Request<br><code>PR-#####</code></span><i>→</i><span>RFQ<br><code>RFQ-YYYY-####</code></span><i>→</i><span>Purchase Quote<br><code>PQU#####</code></span><i>→</i><span>Purchase Order<br><code>POGEN#####</code></span><i>→</i><span>Receipt / ASR<br><code>PRE##### · ASR-YYYY-####</code></span><i>→</i><span>Purchase Invoice<br><code>PI#####</code></span><i>→</i><span>Payment<br><code>JPA#####</code></span></div>
+  <h3>Approval chains in use (Administration → Approval Designer)</h3>
+  <div class="tw"><table><thead><tr><th>Document</th><th>Steps in order</th><th>Condition</th></tr></thead><tbody>
+    <tr><td>Purchase Requisition</td><td>Requester's immediate superior (else role Department Head)</td><td>always</td></tr>
+    <tr><td>Purchase Quote (award)</td><td>Executive Assistant to the President → Commercial Manager</td><td>Commercial Manager only if outside budget</td></tr>
+    <tr><td>Purchase Order</td><td>Supply Chain Manager → Supply Chain VP → President</td><td>President from ₱1,000,000</td></tr>
+    <tr><td>Service report (ASR)</td><td>Head of the requesting department → Supply Chain Manager</td><td>Supply Chain Manager only when the report has exceptions</td></tr>
+    <tr><td>Purchase Invoice</td><td>General Accounting Supervisor → Accounting Manager – Shared Service → CFO</td><td>CFO from ₱500,000</td></tr>
+    <tr><td>Payment</td><td>Treasury Supervisor → Treasury Assistant Manager → President</td><td>President from ₱1,000,000</td></tr>
+    <tr><td>Vendor accreditation</td><td>Supply Chain &amp; Admin Head</td><td>always</td></tr>
+    <tr><td>Vendor bank / terms change</td><td>General Accounting Supervisor → Treasury Assistant Manager</td><td>always</td></tr>
+  </tbody></table></div>
+  <p>Rules for every approval: nobody approves a document they created; a step can name an alternate approver; a role in a step also needs the Approve tick for that area in Roles &amp; Permissions (a named superior or person always can); changes to a chain apply to documents sent for approval afterwards.</p>
+</section>
+
+<!-- ============ P2P-01 ============ -->
+<section class="mod" id="p2p-01">
+  <div class="modhead"><code>LEO-P2P-01</code><h2>Requisitions: Purchase Requisition (ERS)</h2></div>
+  <div class="summary"><b>Summary:</b> Any employee asks for something through one New Request screen. "Warehouse stock" makes a Material Request that the warehouse issues; "Purchase something" makes a Purchase Requisition (PR) for Purchasing. The PR carries items from the catalog (with photos), quantities, estimated cost, purpose, priority, needed-by date, department and location. It reserves budget while open, is approved by the requester's superior, and becomes the source of the RFQ.</div>
+  <h3>Screens</h3>
+  <div class="shots">
+    <figure><img src="shots/p01-new-request.png" alt="New Request screen with catalog search and request lines"><figcaption>Requisitions → New Request (Purchase something)</figcaption></figure>
+    <figure><img src="shots/p01-my-requests.png" alt="My Requests list"><figcaption>Requisitions → My Requests</figcaption></figure>
+    <figure><img src="shots/p01-pr.png" alt="Purchase Requisition PR-00004 approved, with Create RFQ button"><figcaption>PR-00004, approved, "Create RFQ (canvass)"</figcaption></figure>
+  </div>
+  <h3>Function list</h3>
+  <div class="tw"><table><thead><tr><th>#</th><th>Function</th><th>Screen</th><th>Roles</th><th>Status</th></tr></thead><tbody>
+    <tr><td class="id">F-01-01</td><td>Request items from the catalog (search, category icons, photos) or as free text</td><td>Requisitions → New Request</td><td>req C (every role)</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-01-02</td><td>Save as draft, submit for approval, cancel own request, duplicate a request</td><td>New Request / My Requests</td><td>req C D</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-01-03</td><td>Budget impact per G/L account; open requests reserve budget; warning at 80%, critical at 95%</td><td>New Request, Budget Status</td><td>req V</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-01-04</td><td>Approve, return for changes or reject</td><td>Requests to Approve / Requests to Process</td><td>superior; req A</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-01-05</td><td>Start the canvass from an approved PR</td><td>PR page → Create RFQ</td><td>rfq C</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-01-06</td><td>Material Request shortage turns into a PR</td><td>Requests to Process → Supply Chain Review</td><td>req C</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-01-07</td><td>Specification fields for non-catalog items (size, weight, drawing, attachment)</td><td>—</td><td>—</td><td class="plan">○</td></tr>
+    <tr><td class="id">F-01-08</td><td>Procurement tracker (every PR line with its stage)</td><td>—</td><td>—</td><td class="plan">○</td></tr>
+  </tbody></table></div>
+  <h3>User stories</h3>
+  <div class="us"><b class="t">US-01-01 · Ask for something to be bought</b><div class="as">As an employee, I want to request items in one screen, so that I don't fill in a paper or Excel form.</div><ul>
+    <li>Kind "Purchase something" creates document type PR; "Warehouse stock" creates a Material Request (MR).</li>
+    <li>Required: department, location, purpose, at least one line with quantity above zero. Estimated cost per line gives the request total.</li>
+    <li>Number from the PR number series (<code>PR-#####</code>). The request shows in My Requests for the person who created it.</li></ul></div>
+  <div class="us"><b class="t">US-01-02 · Approve a request</b><div class="as">As a superior, I want to approve my staff's requests, so that only needed purchases go ahead.</div><ul>
+    <li>Approver = the requester's "Reports to" user; if none is set, any user with role Department Head.</li>
+    <li>The requester can never approve their own request. Rejection needs a reason; the request goes back to the requester.</li>
+    <li>Approved PR shows "Create RFQ (canvass)". Once a PO is made, the PR status becomes Ordered.</li></ul></div>
+  <div class="us"><b class="t">US-01-03 · See the budget before buying</b><div class="as">As a department head, I want to see what a request does to the budget, so that I approve within it.</div><ul>
+    <li>Budget per company, year and G/L account (Finance → Budgets). Used = posted G/L + open requests not yet ordered.</li>
+    <li>Levels: below 80% fine, 80–95% warning, from 95% critical. With Budget Control on, "outside budget" can add approval steps (e.g. the Commercial Manager on quotes).</li></ul></div>
+  <h3>Status flow</h3>
+  <pre class="mermaid">stateDiagram-v2
+  [*] --> Draft
+  Draft --> PendingApproval: Submit
+  PendingApproval --> Approved: superior approves
+  PendingApproval --> Rejected: reject (reason)
+  Rejected --> Draft: requester edits
+  Approved --> Ordered: PO made from the awarded quote
+  Draft --> Cancelled: requester cancels</pre>
+  <h3>Accounting</h3><p>None. A PR only reserves budget; nothing posts to the G/L.</p>
+</section>
+
+<!-- ============ P2P-02 ============ -->
+<section class="mod" id="p2p-02">
+  <div class="modhead"><code>LEO-P2P-02</code><h2>RFQ, quotes, technical review and QAR</h2></div>
+  <div class="summary"><b>Summary:</b> Purchasing turns an approved PR into a Request for Quotation, invites vendors (one Purchase Quote per vendor), keys in or uploads their quotes, gets a technical review for equipment and spare parts, compares the quotes on a weighted score, and awards one. The award goes through the Purchase Quote approval; after that, Make Order creates the PO. The QAR prints in the company's canvass-sheet format.</div>
+  <h3>Screens</h3>
+  <div class="shots">
+    <figure><img src="shots/p02-rfq.png" alt="RFQ with vendors, technical review and comparison sheet"><figcaption>RFQ-2026-0003: vendors, technical review, comparison sheet</figcaption></figure>
+    <figure><img src="shots/p02-rfq-list.png" alt="RFQ list with stage tiles"><figcaption>Purchasing → Requests for Quotation</figcaption></figure>
+    <figure><img src="shots/p02-pq.png" alt="Awarded Purchase Quote with Make Order button"><figcaption>PQU00005, awarded and approved → Make Order</figcaption></figure>
+  </div>
+  <h3>Function list</h3>
+  <div class="tw"><table><thead><tr><th>#</th><th>Function</th><th>Screen</th><th>Roles</th><th>Status</th></tr></thead><tbody>
+    <tr><td class="id">F-02-01</td><td>Create RFQ from an approved PR (one RFQ per PR)</td><td>PR page</td><td>rfq C</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-02-02</td><td>Invite vendors; blacklisted refused; not-accredited flagged</td><td>RFQ page</td><td>rfq C</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-02-03</td><td>Send: one Purchase Quote per vendor, deadline (default 3 days)</td><td>RFQ page</td><td>rfq C</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-02-04</td><td>Enter quote: prices, offer per line, part no., lead time, terms, warranty, quality, delivery point, extra charges, discount, currency</td><td>RFQ → Enter quote</td><td>rfq C</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-02-05</td><td>Excel quote form per vendor, email draft, upload of the filled form</td><td>RFQ → Quote forms</td><td>rfq C</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-02-06</td><td>Technical review per quote (Compliant / with conditions / Not compliant)</td><td>RFQ page</td><td>Technical Head</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-02-07</td><td>Comparison sheet with weighted score; lowest valid quote marked</td><td>RFQ page</td><td>rfq V</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-02-08</td><td>Award with reason / justification; approval through the Purchase Quote chain</td><td>RFQ → Award</td><td>rfq C; approvers rfq A</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-02-09</td><td>QAR print (landscape) and Excel export</td><td>RFQ → Print QAR</td><td>rfq V</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-02-10</td><td>RFQ settings: minimum quotes, threshold, deadline, technical categories, score weights</td><td>RFQ list → RFQ settings</td><td>Supply Chain &amp; Admin Head</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-02-11</td><td>Options per vendor (alternative brands / delivery points) in one quote</td><td>—</td><td>—</td><td class="plan">○</td></tr>
+  </tbody></table></div>
+  <h3>User stories</h3>
+  <div class="us"><b class="t">US-02-01 · Canvass enough vendors</b><div class="as">As Purchasing, I want the ERP to hold me to the canvass rule, so that awards are defensible.</div><ul>
+    <li>From ₱50,000 (estimate) at least 3 valid quotes; otherwise Send and Award ask for a written justification (e.g. sole distributor).</li>
+    <li>A quote is valid when every line is priced and, where required, the technical review is not "Not compliant". Declined vendors don't count.</li></ul></div>
+  <div class="us"><b class="t">US-02-02 · Technical review</b><div class="as">As Technical Head, I want to check spares and equipment before award, so that we don't buy the wrong part.</div><ul>
+    <li>Required for item categories SPP, TREP, TMAIN, TECH, TIRE, USEDTIRE and for fixed-asset lines (setting); Purchasing can switch it on or off per RFQ.</li>
+    <li>The person who created the RFQ cannot review it. "With conditions" and "Not compliant" need remarks.</li></ul></div>
+  <div class="us"><b class="t">US-02-03 · Award</b><div class="as">As Purchasing, I want to award with the reason on record, so that approvers see why.</div><ul>
+    <li>Choosing a quote that is not the lowest valid one needs a reason. Reason and justification are written into the quote remarks and the RFQ history.</li>
+    <li>Total compared = net + VAT + extra charges − discount, in pesos at the quote date's rate (before withholding tax).</li>
+    <li>Score weights (editable): price 40, lead time 20, payment terms 15, warranty 10, vendor rating 10, quality 5.</li>
+    <li>A Purchase Quote linked to an RFQ can only be approved through the award; a rejected award reopens the RFQ for award.</li></ul></div>
+  <h3>Status flow (RFQ stage)</h3>
+  <pre class="mermaid">stateDiagram-v2
+  [*] --> Draft
+  Draft --> ReceivingQuotes: Send to vendors
+  ReceivingQuotes --> TechnicalReview: quotes priced, review needed
+  ReceivingQuotes --> ForAward: valid quotes, deadline passed or all in
+  TechnicalReview --> ForAward: all reviewed
+  ForAward --> AwardPendingApproval: Award
+  AwardPendingApproval --> Awarded: quote approved
+  AwardPendingApproval --> ForAward: award rejected
+  Awarded --> Ordered: Make Order
+  Draft --> Cancelled
+  ReceivingQuotes --> Cancelled</pre>
+  <h3>Accounting</h3><p>None.</p>
+</section>
+
+<!-- ============ P2P-03 ============ -->
+<section class="mod" id="p2p-03">
+  <div class="modhead"><code>LEO-P2P-03</code><h2>Purchase orders</h2></div>
+  <div class="summary"><b>Summary:</b> Make Order on the awarded quote creates the Purchase Order with the vendor's prices, terms and tax groups. After approval (Supply Chain Manager, Supply Chain VP, and the President from ₱1M) the order can be received, partly or fully, and invoiced from its receipts.</div>
+  <h3>Screens</h3>
+  <div class="shots">
+    <figure><img src="shots/p03-po.png" alt="Purchase Order with approval entries and related documents"><figcaption>POGEN00003 with approvals and related documents</figcaption></figure>
+    <figure><img src="shots/p03-po-list.png" alt="Purchase order list"><figcaption>Purchasing → Purchase Orders</figcaption></figure>
+  </div>
+  <h3>Function list</h3>
+  <div class="tw"><table><thead><tr><th>#</th><th>Function</th><th>Screen</th><th>Roles</th><th>Status</th></tr></thead><tbody>
+    <tr><td class="id">F-03-01</td><td>Make Order from an approved quote; other quotes of the PR become Not Selected; PR becomes Ordered</td><td>Purchase Quote page</td><td>po C</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-03-02</td><td>Edit lines (item, G/L account, fixed asset, item charge), location, expected date, terms, currency</td><td>PO page</td><td>po C</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-03-03</td><td>Send for approval; approve / reject; reopen</td><td>PO page / Requests to Approve</td><td>po C, po A</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-03-04</td><td>Block POs to blacklisted vendors; optionally to non-accredited vendors</td><td>PO page</td><td>setting</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-03-05</td><td>Print the PO</td><td>PO page → Print</td><td>po V</td><td class="part">◐ browser print only</td></tr>
+    <tr><td class="id">F-03-06</td><td>Change order / amendment after approval with re-approval</td><td>—</td><td>—</td><td class="plan">○</td></tr>
+    <tr><td class="id">F-03-07</td><td>Payment milestones on a PO (down payment, progress billing)</td><td>—</td><td>—</td><td class="plan">○</td></tr>
+  </tbody></table></div>
+  <h3>User stories</h3>
+  <div class="us"><b class="t">US-03-01 · Order what was awarded</b><div class="as">As Purchasing, I want the PO to copy the awarded quote, so that nothing is retyped.</div><ul>
+    <li>Lines keep quantity, unit price, part no. and vendor offer; header copies the vendor's posting groups, VAT and WHT groups, payment terms and currency.</li>
+    <li>Extra charges or discounts from the quote are noted in the PO remarks to be added as lines (no freight item charge exists in the Mining setup yet).</li>
+    <li>Number from series POGEN; location defaults to the request's location.</li></ul></div>
+  <div class="us"><b class="t">US-03-02 · Approve by amount</b><div class="as">As management, I want large orders to reach the President, so that big commitments are seen.</div><ul>
+    <li>Supply Chain Manager, then Supply Chain VP, always; President when the PO total (incl. VAT, in pesos) is ₱1,000,000 or more.</li>
+    <li>Once released, the PO can't be edited; Reopen sends it back to draft and the approval starts again.</li></ul></div>
+  <h3>Status flow</h3>
+  <pre class="mermaid">stateDiagram-v2
+  [*] --> Draft
+  Draft --> PendingApproval: Send Approval Request
+  PendingApproval --> Approved: last approver
+  PendingApproval --> Rejected
+  Rejected --> Draft: Reopen
+  Approved --> PartiallyReceived: some quantity received
+  Approved --> Received: all received
+  PartiallyReceived --> Received
+  Received --> Completed: all invoiced</pre>
+  <h3>Accounting</h3><p>None on the PO itself.</p>
+</section>
+
+<!-- ============ P2P-04 ============ -->
+<section class="mod" id="p2p-04">
+  <div class="modhead"><code>LEO-P2P-04</code><h2>Goods receipt</h2></div>
+  <div class="summary"><b>Summary:</b> The warehouse posts a receipt against the PO for what physically arrived, with the vendor's delivery receipt no. Stock goes up at expected cost; the G/L is not touched until the invoice, as in Business Central without "Expected Cost Posting to G/L". Locations that require warehouse handling use a Warehouse Receipt and Put-away instead. Service lines are not received here; they need a service report (P2P-05).</div>
+  <h3>Screens</h3>
+  <div class="shots"><figure><img src="shots/p04-receipt.png" alt="Posted purchase receipt PRE00004"><figcaption>Posted Purchase Receipt PRE00004 (DR GTI-DR-20551)</figcaption></figure></div>
+  <h3>Function list</h3>
+  <div class="tw"><table><thead><tr><th>#</th><th>Function</th><th>Screen</th><th>Roles</th><th>Status</th></tr></thead><tbody>
+    <tr><td class="id">F-04-01</td><td>Post Receipt: quantity per line up to what is still open, DR no., remarks, bin where mandatory</td><td>PO page → Post Receipt</td><td>rcpt P</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-04-02</td><td>Partial receipts; PO becomes Partially Received / Received</td><td>PO page</td><td>rcpt P</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-04-03</td><td>Warehouse Receipt → Put-away for locations with "Require Receive"</td><td>Warehouse</td><td>whse C P</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-04-04</td><td>Block receiving service lines when service acceptance is required</td><td>PO page</td><td>setting</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-04-05</td><td>Inspection / quality check with rejection and return to vendor</td><td>—</td><td>—</td><td class="part">◐ remarks only; returns via credit memo</td></tr>
+    <tr><td class="id">F-04-06</td><td>Lot / serial / expiry tracking on receipt</td><td>—</td><td>—</td><td class="plan">○</td></tr>
+  </tbody></table></div>
+  <h3>User stories</h3>
+  <div class="us"><b class="t">US-04-01 · Receive what arrived</b><div class="as">As the warehouseman, I want to receive against the PO, so that stock and the PO show what really came.</div><ul>
+    <li>Quantity to receive cannot exceed ordered minus received. Each receipt is a posted document <code>PRE#####</code> linked to the PO.</li>
+    <li>Inventory items: item ledger entry with quantity and expected cost (unit cost from the PO line, in pesos). Non-inventory and G/L lines only update the received quantity.</li>
+    <li>Only received quantities can be invoiced (P2P-06).</li></ul></div>
+  <h3>Accounting</h3>
+  <div class="tw"><table><thead><tr><th>Entry</th><th>Account</th><th>Example (PRE00004)</th></tr></thead><tbody>
+    <tr><td>Item ledger: quantity + expected cost</td><td>no G/L entry</td><td class="num">10 tires, ₱144,800 expected</td></tr></tbody></table></div>
+</section>
+
+<!-- ============ P2P-05 ============ -->
+<section class="mod" id="p2p-05">
+  <div class="modhead"><code>LEO-P2P-05</code><h2>Service acceptance: Approved Service Report (ASR)</h2></div>
+  <div class="summary"><b>Summary:</b> For service lines on a PO (Service items and G/L lines), the end user records the work done: % complete per line to date, who did it, who inspected it, a quality rating 1–5 and the reason for any delay. The ERP scores timeliness (30%), scope (30%) and quality (40%) and flags exceptions. After approval, the accepted part is posted as a receipt on the PO, so AP invoices only accepted work. Adopted from LG-ERP M9, with its documented gaps fixed.</div>
+  <h3>Screens</h3>
+  <div class="shots">
+    <figure><img src="shots/p05-asr.png" alt="Approved Service Report with score and approvals"><figcaption>ASR-2026-0002: late by the vendor, Supply Chain Manager step added</figcaption></figure>
+    <figure><img src="shots/p05-asr-list.png" alt="Service acceptance list"><figcaption>Purchasing → Service Acceptance (ASR)</figcaption></figure>
+  </div>
+  <h3>Function list</h3>
+  <div class="tw"><table><thead><tr><th>#</th><th>Function</th><th>Screen</th><th>Roles</th><th>Status</th></tr></thead><tbody>
+    <tr><td class="id">F-05-01</td><td>Record service completion from the PO (one open report per PO)</td><td>PO page → Record Service Completion</td><td>asr C</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-05-02</td><td>Score and exceptions; vendor service record over 12 months</td><td>ASR page</td><td>asr V</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-05-03</td><td>Approve / reject; revise and resend after rejection</td><td>ASR page</td><td>dept head; asr A</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-05-04</td><td>Accepted part posted as a receipt on the PO</td><td>automatic</td><td>—</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-05-05</td><td>Print the service report without prices</td><td>ASR page → Print</td><td>asr V</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-05-06</td><td>Suggest marks in the vendor rating from service reports</td><td>Vendor accreditation → Rate</td><td>vendors C</td><td class="ok">✔</td></tr>
+  </tbody></table></div>
+  <h3>User stories</h3>
+  <div class="us"><b class="t">US-05-01 · Record the work done</b><div class="as">As the end user who received a service, I want to confirm the work, so that the vendor can be paid for it.</div><ul>
+    <li>PO must be Approved or Partially Received. Required: completion date (not in the future), service location, performed by, inspected by, work done, quality.</li>
+    <li>% per line is "to date": it may not go below what was already accepted, and at least one line must increase.</li>
+    <li>Late against the PO expected date needs a delay reason; quality 2 or lower needs remarks; "work differs from the PO" needs a description.</li></ul></div>
+  <div class="us"><b class="t">US-05-02 · Score and flag</b><div class="as">As Supply Chain, I want each service job scored, so that vendor performance covers services.</div><ul>
+    <li>Timeliness 100, minus 10 points per day late when the vendor caused it (setting); not penalised for other reasons.</li>
+    <li>Scope = average % complete; quality = rating × 20; overall = 30% timeliness + 30% scope + 40% quality.</li>
+    <li>Exceptions: quality 2 or lower, late by the vendor, scope differs. A partly complete report is a normal progress report, not an exception.</li></ul></div>
+  <div class="us"><b class="t">US-05-03 · Accept and pay only accepted work</b><div class="as">As AP, I want to invoice only what the user accepted.</div><ul>
+    <li>Approval: head of the requesting department; Supply Chain Manager added only when there are exceptions. The recorder cannot approve.</li>
+    <li>On the last approval a receipt is posted for the increase (qty × % to date − already received). The invoice then picks up only that quantity.</li></ul></div>
+  <h3>Status flow</h3>
+  <pre class="mermaid">stateDiagram-v2
+  [*] --> Draft: Record Service Completion
+  Draft --> PendingApproval: Send for acceptance
+  PendingApproval --> Approved: last approver → receipt posted on the PO
+  PendingApproval --> Rejected: reason required
+  Rejected --> Draft: Revise and resend
+  PendingApproval --> Draft: Withdraw</pre>
+  <h3>Accounting</h3><p>Same as a goods receipt: quantity received on the PO line, no G/L entry. The expense posts with the purchase invoice.</p>
+</section>
+
+<!-- ============ P2P-06 ============ -->
+<section class="mod" id="p2p-06">
+  <div class="modhead"><code>LEO-P2P-06</code><h2>Purchase invoices and credit memos</h2></div>
+  <div class="summary"><b>Summary:</b> AP creates the invoice from the PO's receipts (Get Receipt Lines), enters the vendor's invoice no., and sends it for approval (GA Supervisor, Accounting Manager – Shared Service, CFO from ₱500k). Posting books inventory or expense, input VAT, expanded withholding tax and the payable, and turns the expected stock cost into actual cost. Credit memos (returns) reverse it.</div>
+  <h3>Screens</h3>
+  <div class="shots"><figure><img src="shots/p06-pi.png" alt="Posted purchase invoice PI00003 with totals"><figcaption>PI00003 (vendor invoice GTI-SI-004471), posted</figcaption></figure></div>
+  <h3>Function list</h3>
+  <div class="tw"><table><thead><tr><th>#</th><th>Function</th><th>Screen</th><th>Roles</th><th>Status</th></tr></thead><tbody>
+    <tr><td class="id">F-06-01</td><td>Create Invoice (Get Receipt Lines) from the PO: only received, not yet invoiced quantities</td><td>PO page</td><td>pi C</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-06-02</td><td>Direct invoice without PO (utilities, fees) with G/L, item, fixed asset or item charge lines</td><td>Purchase Invoices → New</td><td>pi C</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-06-03</td><td>VAT and EWT by posting setup; foreign currency at the invoice date's rate</td><td>PI page</td><td>pi C</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-06-04</td><td>Approve, post; vendor ledger entry with due date from payment terms</td><td>PI page</td><td>pi A, pi P</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-06-05</td><td>Purchase credit memo (return)</td><td>Purchase Credit Memos</td><td>pi C P</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-06-06</td><td>Item charge assigned to an item (landed cost)</td><td>PI line type Charge (Item)</td><td>pi C</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-06-07</td><td>3-way match with price / quantity tolerance and an exceptions queue</td><td>—</td><td>—</td><td class="part">◐ quantity matched to receipts; no price tolerance check</td></tr>
+    <tr><td class="id">F-06-08</td><td>Attach the vendor's invoice scan</td><td>—</td><td>—</td><td class="plan">○</td></tr>
+  </tbody></table></div>
+  <h3>User stories</h3>
+  <div class="us"><b class="t">US-06-01 · Invoice what was received</b><div class="as">As AP, I want the invoice built from the receipts, so that we never pay for what didn't arrive.</div><ul>
+    <li>Lines = received − invoiced − already on another open invoice, per PO line. Error if nothing is left to invoice.</li>
+    <li>Vendor invoice no. is required. Due date = invoice date + payment terms days.</li>
+    <li>Approval by amount incl. VAT in pesos: GA Supervisor, Accounting Manager – Shared Service; CFO from ₱500,000. Posting needs status Approved and an open posting period.</li></ul></div>
+  <h3>Accounting entries (example PI00003)</h3>
+  <div class="tw"><table><thead><tr><th>Line</th><th>Account (LAMI)</th><th class="num">Debit</th><th class="num">Credit</th></tr></thead><tbody>
+    <tr><td>Items received (inventory account of the item's posting group)</td><td><code>1132000</code> Inventory – TIRE</td><td class="num">144,800.00</td><td></td></tr>
+    <tr><td>Input VAT 12%</td><td><code>1151010</code> Input Taxes – Current</td><td class="num">17,376.00</td><td></td></tr>
+    <tr><td>Expanded withholding tax WC158 1%</td><td><code>2122210</code> Withholding Tax – Expanded</td><td></td><td class="num">1,448.00</td></tr>
+    <tr><td>Payable to the vendor (net of EWT)</td><td><code>2110010</code> Accounts Payable – Trade</td><td></td><td class="num">160,728.00</td></tr>
+    <tr><td colspan="2"><b>Total</b></td><td class="num"><b>162,176.00</b></td><td class="num"><b>162,176.00</b></td></tr></tbody></table></div>
+  <p>Service and G/L lines debit the purchase account of the General Posting Setup instead of inventory (e.g. <code>7360002</code> for the aircon service). The EWT lines feed BIR Form 2307 and the QAP (Reports → Tax).</p>
+</section>
+
+<!-- ============ P2P-07 ============ -->
+<section class="mod" id="p2p-07">
+  <div class="modhead"><code>LEO-P2P-07</code><h2>Payments</h2></div>
+  <div class="summary"><b>Summary:</b> A Payment Journal pays one vendor from one bank account by check, bank transfer, online transfer or cash, applied to the vendor's open invoices. AP prepares it, Treasury approves (President from ₱1M) and posts it; the check no. comes from the bank account. Unapplied amounts stay open as an advance to the vendor.</div>
+  <h3>Screens</h3>
+  <div class="shots"><figure><img src="shots/p07-pay.png" alt="Posted payment journal JPA00002 with check number"><figcaption>JPA00002, check no. 000001 from BDO-003</figcaption></figure></div>
+  <h3>Function list</h3>
+  <div class="tw"><table><thead><tr><th>#</th><th>Function</th><th>Screen</th><th>Roles</th><th>Status</th></tr></thead><tbody>
+    <tr><td class="id">F-07-01</td><td>Payment journal: vendor, bank, method, apply entries, amount</td><td>Treasury → Payment Journals</td><td>pay C</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-07-02</td><td>Suggest Vendor Payments (due invoices)</td><td>Payment Journals → Suggest</td><td>pay C</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-07-03</td><td>Approve and post; check no. assigned; check printing with amount in words</td><td>Payment page</td><td>pay A, pay P</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-07-04</td><td>Void check, unapply, apply entries later, vendor refund</td><td>Payment page</td><td>pay P</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-07-05</td><td>Foreign currency payments with realized exchange gain / loss</td><td>Payment page</td><td>pay P</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-07-06</td><td>Payment run (many vendors in one batch) and bank file export</td><td>—</td><td>—</td><td class="plan">○</td></tr>
+  </tbody></table></div>
+  <h3>User stories</h3>
+  <div class="us"><b class="t">US-07-01 · Pay a vendor</b><div class="as">As Treasury, I want to pay approved invoices from the right bank, so that the books and the bank agree.</div><ul>
+    <li>Amount to apply per invoice cannot exceed its remaining amount; currencies must match.</li>
+    <li>Check: number = bank account's next check no., assigned on posting. The bank ledger entry feeds the bank reconciliation and the daily cash position.</li>
+    <li>Approval: Treasury Supervisor, Treasury Assistant Manager; President from ₱1,000,000. The preparer cannot approve.</li></ul></div>
+  <h3>Accounting entries (example JPA00002)</h3>
+  <div class="tw"><table><thead><tr><th>Line</th><th>Account (LAMI)</th><th class="num">Debit</th><th class="num">Credit</th></tr></thead><tbody>
+    <tr><td>Clear the payable</td><td><code>2110010</code> Accounts Payable – Trade</td><td class="num">160,728.00</td><td></td></tr>
+    <tr><td>Bank (BDO-003, check 000001)</td><td><code>1110011</code> Cash in Bank – PHP</td><td></td><td class="num">160,728.00</td></tr></tbody></table></div>
+</section>
+
+<!-- ============ P2P-08 ============ -->
+<section class="mod" id="p2p-08">
+  <div class="modhead"><code>LEO-P2P-08</code><h2>Vendors and accreditation</h2></div>
+  <div class="summary"><b>Summary:</b> Vendor cards carry posting groups, tax groups, TIN and payment terms; new vendors get their number from the vendor series and need approval. Accreditation tracks the required documents with expiry dates (recorded by one person, verified by another), is approved by the Supply Chain &amp; Admin Head for 12 months, and can be suspended or blacklisted. Changes to bank details and payment terms go through an approved change request. Adopted from LG-ERP M1.</div>
+  <h3>Screens</h3>
+  <div class="shots">
+    <figure><img src="shots/p08-vendacc.png" alt="Vendor accreditation dashboard"><figcaption>Purchasing → Vendor Accreditation</figcaption></figure>
+    <figure><img src="shots/p08-vendor.png" alt="Vendor accreditation card for Gumanay Trading"><figcaption>Accreditation card of VEN-LOC-00012</figcaption></figure>
+  </div>
+  <h3>Function list</h3>
+  <div class="tw"><table><thead><tr><th>#</th><th>Function</th><th>Screen</th><th>Roles</th><th>Status</th></tr></thead><tbody>
+    <tr><td class="id">F-08-01</td><td>Vendor card with number series (e.g. VEN-LOC-00328), TIN duplicate check, approval of new vendors</td><td>Purchasing → Vendors</td><td>vendors C; ICT Head / Acctg Mgr approve</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-08-02</td><td>Required documents list (9 by default, editable) with validity</td><td>Vendor Document Requirements</td><td>Supply Chain &amp; Admin Head</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-08-03</td><td>Record and verify documents (two different people)</td><td>Accreditation card</td><td>vendors C</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-08-04</td><td>Submit for accreditation; approve; 12-month validity; renewal alerts 60 days before</td><td>Accreditation card</td><td>vendors A</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-08-05</td><td>Suspend, blacklist, reinstate with reason</td><td>Accreditation card</td><td>Supply Chain &amp; Admin Head</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-08-06</td><td>Vendor rating (delivery 25, quality 30, price 20, responsiveness 15, compliance 10)</td><td>Accreditation card → Rate</td><td>vendors C</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-08-07</td><td>Bank-detail and payment-term change request with approval</td><td>Vendor card → Request change</td><td>vendors C; GA Sup → Treasury AM</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-08-08</td><td>Vendor self-service portal (documents, quotes)</td><td>—</td><td>—</td><td class="plan">○</td></tr>
+  </tbody></table></div>
+  <h3>User stories</h3>
+  <div class="us"><b class="t">US-08-01 · Only deal with accredited vendors</b><div class="as">As Supply Chain, I want vendors checked before we order from them.</div><ul>
+    <li>Blacklisted vendors cannot be invited to an RFQ or get a PO. With "Require accreditation for POs" on (Vendor Accreditation settings, off today for the transition), non-accredited vendors are blocked too.</li>
+    <li>Mandatory documents must be verified before submitting; the person who recorded a document cannot verify it.</li></ul></div>
+  <div class="us"><b class="t">US-08-02 · Protect vendor bank details</b><div class="as">As Treasury, I want bank-detail changes approved, so that payments can't be redirected.</div><ul>
+    <li>Payment terms can't be edited directly on the vendor card; a change request goes to the GA Supervisor, then the Treasury Assistant Manager, and is applied on approval.</li></ul></div>
+  <h3>Status flow (accreditation)</h3>
+  <pre class="mermaid">stateDiagram-v2
+  [*] --> NotAccredited
+  NotAccredited --> PendingReview: Submit (mandatory documents verified)
+  PendingReview --> Accredited: approve (valid 12 months)
+  PendingReview --> NotAccredited: reject
+  Accredited --> Expired: validity ends
+  Expired --> PendingReview: renewal
+  Accredited --> Suspended
+  Suspended --> Accredited: reinstate
+  Accredited --> Blacklisted
+  Suspended --> Blacklisted</pre>
+</section>
+
+<!-- ============ P2P-99 ============ -->
+<section class="mod" id="p2p-99">
+  <div class="modhead"><code>LEO-P2P-99</code><h2>Open items and limits (as of v0.17)</h2></div>
+  <ul class="gap">
+    <li><b>No real logins yet.</b> Users switch with "Acting as"; permissions and approvals apply to the chosen user, but nobody is stopped from choosing another user. Logins and a shared database are the last step in the build order.</li>
+    <li><b>Runs on one PC.</b> The ERP is served from the administrator's PC (localhost:8765); others cannot reach it over the network.</li>
+    <li><b>No file attachments</b> (vendor quotes, invoices, accreditation documents are recorded, not uploaded).</li>
+    <li><b>3-way match</b> limits the invoice to received quantities but has no price or quantity tolerance check or exceptions queue.</li>
+    <li><b>PO change orders, payment milestones and payment runs</b> are not built.</li>
+    <li><b>Freight on quotes</b>: the Mining setup has no freight item charge, so quote extras are noted on the PO instead of added as a landed cost.</li>
+    <li><b>Procurement tracker</b> (every PR line with its stage) is planned, from the Tankering PR/PQ monitoring workbook.</li>
+  </ul>
+</section>
+</main>
+</div>

@@ -1,0 +1,230 @@
+<title>Leonio ERP Backlog</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: ERS look — navy header band, filter chips, then one card per section with a compact list of work items */
+:root {
+  --primary: #1a56db; --primary-50: #eef3fe; --band-a: #0c2d63; --band-b: #081d42; --band-fg: #dbe5ff; --gold: #f59e0b;
+  --bg: #f4f6fb; --card: #ffffff; --text: #111827; --muted: #6b7280; --border: #e6eaf1; --soft: #f8fafc;
+  --green: #16a34a; --green-bg: #eaf7ee; --amber: #b45309; --amber-bg: #fff6e6; --violet: #7c3aed; --violet-bg: #f3edfe; --gray-bg: #f1f3f6;
+  --font: Inter, "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --primary: #7aa2ff; --primary-50: #15254a; --band-a: #0a1e45; --band-b: #06132d; --band-fg: #c7d4f5;
+  --bg: #0b1220; --card: #111a2e; --text: #e5e7eb; --muted: #94a3b8; --border: #1f2a44; --soft: #0f1729;
+  --green: #4ade80; --green-bg: #0f2a1d; --amber: #fbbf24; --amber-bg: #2d220d; --violet: #b794f6; --violet-bg: #231842; --gray-bg: #1a2338; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --primary: #7aa2ff; --primary-50: #15254a; --band-a: #0a1e45; --band-b: #06132d; --band-fg: #c7d4f5;
+  --bg: #0b1220; --card: #111a2e; --text: #e5e7eb; --muted: #94a3b8; --border: #1f2a44; --soft: #0f1729;
+  --green: #4ade80; --green-bg: #0f2a1d; --amber: #fbbf24; --amber-bg: #2d220d; --violet: #b794f6; --violet-bg: #231842; --gray-bg: #1a2338; color-scheme: dark }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 14px; line-height: 1.55; }
+.gut { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.inner { max-width: 980px; margin: 0 auto; }
+header { background: linear-gradient(180deg, var(--band-a), var(--band-b)); color: var(--band-fg); padding-block: 28px 24px; }
+header .inner { display: grid; gap: 8px; }
+.brand { color: #fff; font-weight: 700; font-size: 13px; letter-spacing: .4px; text-transform: uppercase; display: flex; gap: 8px; align-items: center; }
+.brand i { width: 10px; height: 10px; border-radius: 3px; background: var(--gold); display: inline-block; }
+h1 { margin: 0; color: #fff; font-size: clamp(24px, 4vw, 30px); text-wrap: balance; }
+header p { margin: 0; max-width: 66ch; }
+main { padding-block: 22px 60px; }
+main .inner { display: grid; gap: 18px; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+.tile { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; display: grid; gap: 2px; }
+.tile b { font-size: 24px; font-variant-numeric: tabular-nums; }
+.tile span { color: var(--muted); font-size: 12.5px; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.filters button { font: inherit; font-size: 13px; font-weight: 600; border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 99px; padding: 6px 13px; cursor: pointer; }
+.filters button[aria-pressed="true"] { background: var(--primary); border-color: var(--primary); color: #fff; }
+:root[data-theme="dark"] .filters button[aria-pressed="true"] { color: #0b1220; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .filters button[aria-pressed="true"] { color: #0b1220; } }
+.filters button:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+section.card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; display: grid; gap: 10px; min-width: 0; }
+section.card h2 { margin: 0; font-size: 17px; text-wrap: balance; }
+section.card > p { margin: 0; color: var(--muted); font-size: 13px; }
+.list { display: grid; }
+.row { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; gap: 12px; padding: 11px 0; border-top: 1px solid var(--border); align-items: start; }
+.row:first-child { border-top: 0; }
+.n { width: 28px; height: 28px; border-radius: 8px; background: var(--primary-50); color: var(--primary); font-weight: 700; font-size: 12.5px; display: grid; place-items: center; font-variant-numeric: tabular-nums; }
+.t b { display: block; font-weight: 600; }
+.t span { color: var(--muted); font-size: 13px; }
+.src { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 5px; }
+.src em { font-style: normal; font-size: 11.5px; font-weight: 600; border-radius: 6px; padding: 1px 7px; background: var(--gray-bg); color: var(--muted); }
+.st { font-size: 12px; font-weight: 600; border-radius: 99px; padding: 2px 10px; white-space: nowrap; }
+.s-done { background: var(--green-bg); color: var(--green); }
+.s-next { background: var(--primary-50); color: var(--primary); }
+.s-plan { background: var(--gray-bg); color: var(--muted); }
+.s-data { background: var(--amber-bg); color: var(--amber); }
+.s-proc { background: var(--violet-bg); color: var(--violet); }
+@media (max-width: 560px) { .row { grid-template-columns: 30px minmax(0, 1fr); } .row .st { grid-column: 2; justify-self: start; } }
+</style>
+
+<header class="gut"><div class="inner">
+  <div class="brand"><i></i>Leonio ERP · v0.17</div>
+  <h1>What still needs to be developed</h1>
+  <p>One list combining the earlier roadmap, the gaps found in your current processes, your 26 decisions of 8 Nov 2026, and what your forms, roles file and approval matrices showed. Updated 9 Nov 2026.</p>
+</div></header>
+
+<main class="gut"><div class="inner">
+  <div class="tiles" id="tiles"></div>
+  <div class="filters" role="group" aria-label="Filter by status" id="filters"></div>
+  <div id="root" style="display:grid;gap:18px"></div>
+  <p style="margin:0;color:var(--muted);font-size:12.5px">Sources: <b>Earlier plan</b> = roadmap before the process documents · <b>Gap #</b> = row in the Process Reconciliation · <b>Decision #</b> = your decision list · <b>Found in testing</b> = discovered while building · <b>ERS settings / reports / …</b> = a function in your ERS that the ERP lacks · <b>Item review</b> = the items and catalog check of 9 Nov 2026 · <b>QAR samples / Tankering report</b> = the files you shared on 9 Nov 2026.</p>
+</div></main>
+
+<script>
+(function () {
+  var S = { done: ['s-done', 'Done'], next: ['s-next', 'Build next'], plan: ['s-plan', 'Planned'], data: ['s-data', 'Needs data / others'], proc: ['s-proc', 'Process change only'] };
+  var SECTIONS = [
+    { h: 'Already built after your process documents (v0.7)', p: 'For reference: these are finished.', items: [
+      ['done', 'Requisitions module (your ERS) with material issuance', 'Request → superior → Supply Chain review → warehouse release that posts to inventory and the G/L, charged to department and equipment. Replaces the Excel MRF/MIF and tracker.', ['Gap 16', 'Gap 17', 'Decision 3', 'Decision 14']],
+      ['done', 'One request screen for stock and purchases', 'Warehouse stock creates a Material Request; "Purchase something" creates a Purchase Requisition. Both in My Requests.', ['Decision 3']],
+      ['done', 'Approvers by role, superior, department head, named user and amount', 'Plus Purchase Invoice 2 levels + CFO above ₱500,000 and PO: SC Manager → SC VP → CLG.', ['Decision 7', 'Decision 8']],
+      ['done', 'ERS look, category icons and item photos', '', ['Decision 4', 'Decision 5']],
+      ['done', 'Budget commitment and thresholds', 'Open requests reserve budget; warning at 80%, critical at 95%.', ['Gap 3']],
+      ['done', 'Issuance Accounts setup', 'Where Accounting picks the expense account per item group.', ['Found in testing']] ] },
+    { h: 'Build order (your decision 26)', p: 'In this sequence, one at a time, each tested before the next.', items: [
+      ['done', 'Sales Contract (NOSPA)', 'Built in v0.8: buyer, grade, volume, price per WMT, ports, Laycan, shipment no., seller bank, deposit schedule; approval, signature, notarisation, Laycan, vessel, loading, closing; amendments with approval.', ['Gap 26', 'Decision 19']],
+      ['done', 'Deposit 1, Deposit 2 and Provisional prepayment invoices', 'Built in v0.8: created from the contract when each milestone is reached, posted to Advances from Customers; the final invoice deducts them; settlement shows balance to collect or refund.', ['Gap 27', 'Gap 29', 'Decision 20', 'Earlier plan']],
+      ['done', 'Sales Order', 'Built in v0.9: released, then invoiced in full or in parts (quantity invoiced per line); the Sales Contract creates its order after loading and the final invoice comes from it. The 50 WMT limit is not copied.', ['Gap 28', 'Decision 21']],
+      ['done', 'Vendor accreditation', 'Built in v0.10: required documents (editable list), one person records and another verifies, approval by the Supply Chain & Admin Head, 12-month validity with renewal and expiry reminders, suspend / blacklist / reinstate, vendor rating; POs blocked for vendors not accredited once switched on.', ['Gap 1', 'Decision 10']],
+      ['done', 'Approval of bank-detail and payment-term changes', 'Built in v0.10 for vendors: Supply Chain requests → Accounting Shared checks → Treasury approves; the vendor card no longer changes payment terms directly. Customers still to do.', ['Gap 2', 'Decision 11']],
+      ['done', 'RFQ with quote comparison and technical review', 'Built in v0.11: RFQ from an approved PR, vendor invitations, quote entry, technical review by the Technical Head, comparison sheet, 3 valid quotes from ₱50,000 or a justification, reason when not the lowest, award through the quote approval, then Make Order.', ['Gap 4', 'Decision 9']],
+      ['done', 'Service acceptance (Approved Service Report)', 'Built in v0.13: the end user records % complete per service line, performer, inspector, quality 1–5 and delay reason; timeliness, scope and quality score with exceptions; approval by the head of the requesting department, plus the Supply Chain Manager when there are exceptions; on approval the accepted part is received on the PO, so AP invoices only accepted work. Progress reports, revise after rejection, print without prices.', ['Gap 8', 'LG-ERP']],
+      ['done', 'Daily Cash Position report', 'Built in v0.14: per bank account the beginning book balance, receipts, disbursements and ending balance; outstanding checks and deposits in transit; latest bank statement balance and the difference; payments in process; the next 7 days\' payments and collections with projected cash; group view; Excel export; daily submission reviewed by the Treasury Manager. Still to check against your Excel layout when you send a copy.', ['Gap 30', 'Decision 23']],
+      ['done', 'Bank statement import and automatic matching', 'Built in v0.14: CSV or Excel statement per bank account, columns recognised and remembered, duplicates skipped; matched by check no., reference or amount and date; manual matching (one bank line to several entries); unidentified deposits become a draft Cash Receipt, bank charges and interest a draft General Journal; matches fill a Bank Acc. Reconciliation. Still to test with a real statement from each bank.', ['Gap 35', 'Decision 24']],
+      ['plan', 'Real logins and a shared database on a server', 'Required before anyone else can use it. Today data is on one PC and anyone can switch users. Permissions themselves move to the dynamic setup below. Includes locking after failed logins and a security overview, as in ERS.', ['Decision 26', 'Earlier plan', 'ERS settings']] ] },
+    { h: 'Make the ERP set up by your users (dynamic)', p: 'Setup screens so your process owner changes roles, approvals, fields and forms without programming. Suggested start: items 1 and 2, since everything else depends on who the user is and who approves. You decide where this fits in the build order.', items: [
+      ['done', 'Roles and permissions editor', 'Built in v0.15: create roles and tick View / Create / Delete / Approve / Post for 24 areas and per company; menus, pages, buttons and actions follow. Your 25 current roles are set up; the roles file can be imported (71 position titles found, names not imported). Still to do: decide which imported roles to use and give them to the real users.', ['Roles file']],
+      ['done', 'Approval designer', 'Built in v0.16: chains per company and document; conditions on amount, amount band, budget, G&A, capex, the creator\'s department and a dimension such as a vessel; alternate approver; "Who would approve this?" naming the people; checks for steps nobody can approve or no matching step; draft until published; copy to another document or company; steps Required or Automatic. Still to do: Optional steps, named templates kept inactive, and loading your three approval matrices (decide which ones to use).', ['Approval matrix', 'Decision 7', 'ERS settings']],
+      ['plan', 'Users: status, employee no. and deactivation', 'Active / Inactive / Locked; someone who leaves can no longer act, but their history stays.', ['ERS settings']],
+      ['plan', 'Departments with a head and cost centers', 'A department record (on the DEPT dimension) with its head, so the "Department head" approver is explicit; optional cost centers under each department.', ['ERS settings']],
+      ['plan', 'Behaviour switches', 'Allow requesters to cancel, require a reason to reject or return, autosave forms, show the budget on the request form.', ['ERS settings']],
+      ['plan', 'Numbering for Material Requests and Sales Contracts', 'Use the Business Central No. Series per company instead of the fixed MRF-00001 and NOSPA-2026-001 formats.', ['ERS settings']],
+      ['plan', 'Company details for forms and help', 'Company phone, email and logo for printed forms; a "Need help? Contact…" box in the sidebar.', ['ERS settings', 'Forms']],
+      ['plan', 'Display preferences', 'Landing page per role or user (for example the warehouse opens on For Release), rows per page, dark theme.', ['ERS settings']],
+      ['plan', 'Budget settings', 'Budget by department (dimension), carry forward of unused budget, budget owner, and the over-budget action (warn or block) per company.', ['ERS settings']],
+      ['plan', 'Transaction types', 'User-defined sub-types (for example Purchase Invoice: RFP, Cash Advance, Liquidation, Equipment services; Sales Invoice: Nickel, Services, Fuel), each with its own default accounts, number series, required fields, approval chain and form.', ['Approval matrix']],
+      ['plan', 'Custom fields', 'Add text, number, date, list or yes/no fields to any document or card, optionally required. Shown on screens, forms and exports; they do not change posting.', ['Found in review']],
+      ['plan', 'Form designer', 'A printed-form template per company and document (logo, header, fields, amount in words). Replaces "forms matched to yours".', ['Forms']],
+      ['plan', 'Editable lists', 'Contract milestones and deposit triggers, request priorities and reasons, item category icons.', ['Found in review']],
+      ['plan', 'Dimensions put to work', 'Default dimensions (for example a vessel fills VESSEL), mandatory dimension rules per account, reports and budgets by dimension, approvals by dimension.', ['Found in review']],
+      ['plan', 'Setup changes logged and approved', 'Changes to roles, approval rules and forms go through approval and the Change Log, like new vendors do now.', ['Found in review']] ] },
+    { h: 'New from your forms and approval matrices', p: 'Found in the files you shared on 8 Nov 2026.', items: [
+      ['plan', 'Price adjustment formula on the Sales Contract', 'For example Ni above 1.4%: +USD 0.70/WMT per 0.01%; moisture below 35%: +USD 0.50/WMT per 1%. The final invoice calculates it from the COQ.', ['Forms: LAMI Final Invoice']],
+      ['plan', 'Pro forma, final and despatch invoice printouts', 'Contract no., WMT ± tolerance, amounts in words, less 1st/2nd down payment and provisional, balance due, beneficiary bank and SWIFT.', ['Forms: LAMI']],
+      ['plan', 'Despatch and demurrage (miscellaneous) invoice', 'Number of days × despatch rate, linked to the contract and shipment no.', ['Forms: LAMI Misc. Invoice']],
+      ['plan', 'Request for Payment (RFP)', 'Control no., payee, amount in words, supporting papers, prepared / approved / checked; its own approval chains in the matrix.', ['Forms: RFP', 'Approval matrix']],
+      ['plan', 'Cash Advance and Liquidation', 'Cash advance voucher with authority to deduct; liquidation that becomes a Purchase Invoice or General Journal depending on whether the advance was less or more than spent.', ['Forms', 'Approval matrix']],
+      ['plan', 'Pre-printed form serial numbers', 'Record the BIR booklet no. (billing invoice, billing statement, OR, AR, credit memo) on each document until the ERP is BIR-registered.', ['Forms', 'Decision 25']],
+      ['plan', 'Delegate an approval', 'Hand an approval request to someone else, as in your Business Central workflow export.', ['Roles file']] ] },
+    { h: 'From the ERS review: reports and screens', p: 'Functions in your ERS screens and report tabs that the ERP lacks (full comparison: ERS and ERP, screen by screen).', items: [
+      ['plan', 'Requisition reports', 'Summary (totals, approved and released %, amounts, monthly trend, status mix), requests register, items requested, departments with approval rate. Date, department and status filters; export.', ['ERS reports']],
+      ['plan', 'Approver performance report', 'Per approver: approved, returned, rejected, and average turnaround time, for every document type, not only requests.', ['ERS reports']],
+      ['plan', 'Inventory status report', 'Stock against minimum stock per item and location, below-minimum items first.', ['ERS reports', 'Decision 15']],
+      ['plan', 'Budget reports and charts', 'Budget by department, cumulative trend through the year, and the open requests eating into each budget.', ['ERS reports', 'ERS budget']],
+      ['plan', 'Requisition dashboard charts', 'Personal tiles (pending, approved, released, rejected) that open the filtered list, monthly trend, status chart, department budget widget, top requested items.', ['ERS dashboard']],
+      ['plan', 'Request lines: brand and specifications', 'Optional preferred brand and specifications (part no., model) per item; a confirmation before submitting.', ['ERS new request']],
+      ['plan', 'Search, date filter and pages on request lists', 'Search by request no., item or purpose; date range; 10–50 rows per page.', ['ERS my requests']],
+      ['plan', 'Approval conveniences', 'Bulk approve (not for over-budget requests), "approved by me" list, "Approve anyway?" confirmation when over budget, stock warning for the approver.', ['ERS approvals']],
+      ['plan', 'Printable request form with approval history', 'Items, totals and every approval step with date and remarks; replaces the paper MRF/MIF.', ['ERS my requests', 'Gap 16']],
+      ['plan', 'Item details and catalog export', 'Details per item (stock by location, last purchase, open requests) and export of the catalog.', ['ERS catalog']],
+      ['plan', 'Data scope by role', 'Requesters see their own requests, approvers their department, Supply Chain and management everything; report exports logged.', ['ERS reports']] ] },
+    { h: 'Quotations and procurement tracking', p: 'From your 13 QAR samples and the Tankering PR/PQ monitoring workbook (9 Nov 2026).', items: [
+      ['done', 'QAR in your format', 'Built in v0.12: Canvass Sheet – Commercial Evaluation, printable (landscape) and exported to Excel, awarded supplier highlighted, Prepared by / Technical review / Approved by from the trail.', ['QAR samples']],
+      ['done', 'Richer quote entry', 'Built in v0.12: vendor offer per line, part no., extra charges, negotiated discount, VAT, quality, delivery point / shipyard, inclusions, scope; totals in pesos. Still to do: options per vendor (e.g. Bataan / Bauan vs Cebu), and extra charges carried to PO lines automatically (today they are noted in the PO remarks).', ['QAR samples']],
+      ['done', 'Quote template by email, with Excel upload', 'Built in v0.12: Excel quote form per vendor, an email with the items opens in your mail program (attach the form), and the filled form is uploaded back. A PDF version of the request is not built.', ['Found in review']],
+      ['done', 'Weighted quote scoring', 'Built in v0.12: price, lead time, payment terms, warranty, vendor rating and quality, weights editable in RFQ settings; shown next to the lowest valid quote.', ['LG-ERP']],
+      ['plan', 'Vendor portal', 'Vendors log in, see the RFQs they are invited to and submit quotes online. Only after real logins and a server reachable from the internet, with ICT\'s approval.', ['Found in review']],
+      ['plan', 'Procurement Tracker report', 'Replaces the Supply Chain daily to-do list: every PR line with its stage (awaiting quote, technical QAR approval, vendor accreditation, PO approval, awaiting delivery, delivered to Lambert / Bauan / Bataan / vessel, due for payment, completed), milestone dates, ageing, cycle times, weekly movement and cost savings, by company, vessel, buyer and purchase type; produced from the documents instead of typed.', ['Tankering report']],
+      ['plan', 'PR fields for tracking', 'Criticality code (fixed list, e.g. C1a / C1b / C2a / C2b), purchase type (Materials / Services / Spare parts), assigned buyer, vessel, required date; a dated follow-up comment log; supplier acknowledgment and availability dates on the PO.', ['Tankering report']] ] },
+    { h: 'Items and the Item Catalog',p: 'One item master; the catalog is the employees\' view of it. These keep the two in step (item review, 9 Nov 2026).', items: [
+      ['plan', 'Catalog fields on the item card', '"Show in catalog" (requestable), which companies or locations may request it, a plain-language name next to the technical description, specifications or part no. Editable from the item card or the catalog.', ['Item review']],
+      ['plan', 'Catalog filtered by vessel or location', 'Tankering has 104,027 items, mostly vessel spare parts; requesters see only the items for their vessel or site.', ['Item review']],
+      ['plan', 'Price shown when the card has no cost', 'Use the last purchase price, or show "price not yet known" instead of ₱0.', ['Item review']],
+      ['plan', 'Item clean-up report', 'Lists duplicate descriptions, stock items that look like services or fees, items with no cost, and units that differ between purchase and stock, so Supply Chain can fix them.', ['Item review']],
+      ['done', 'Standard item descriptions (your 2025 template)', 'Built in v0.17: description builder on the item card and in Inventory → Item Description Review (General Description · Model · Part No. · Characteristics · Dimension + unit · Color · Classification · Brand, max 100 characters), duplicate check, Open → For Verification → Reviewed and Closed / Duplicate / For Deletion, bulk approval, import of the 2025 workbook (957 items matched by old description). Still to do: match the other 2,035 rows (needs item numbers or a looser match), blocking of duplicates / items for deletion, the builder in New Request.', ['Item template 2025']],
+      ['plan', 'Item dimensions, weight, shelf life and lead time', 'L × W × H, weight, volume, shelf life and standard lead time on the item card (per unit of measure), and specification fields on requisition lines for items not in the catalog. LG-ERP asks for these on its PR form but does not save them.', ['LG-ERP', 'Item review']] ] },
+    { h: 'BIR tax reports (replacing the Philtax customization)', p: 'The 13 Withholding Tax Reports in your current system (screenshot, 9 Nov 2026). The data is already on every posted document (TIN, ATC, base, tax); these are reports, printouts and BIR files. Send a sample of each from your current system so the formats match exactly.', items: [
+      ['done', 'BIR Form 2307 (certificate of creditable tax withheld)', 'Built in v0.15: Reports → BIR Withholding Tax. Per supplier per quarter, by ATC and month of the quarter, from posted purchase invoices and credit memos; print one or all. Needs the company TIN, address and signatory in BIR settings.', ['Philtax']],
+      ['done', 'Monthly and Quarterly Alphalist of Payees (MAP / QAP)', 'Built in v0.15: per supplier TIN and ATC, income payment and tax withheld, reconciled with the EWT payable in the G/L; Excel export. Still to do: the BIR .dat file, copied from a sample of your current system.', ['Philtax']],
+      ['plan', 'Annual Alphalist of Payees', 'For the 1604-E.', ['Philtax']],
+      ['plan', 'BIR Form 2306 (final tax withheld)', 'For final withholding taxes.', ['Philtax']],
+      ['plan', 'Monthly Alphalist of Creditable WHT and SAWT', 'Tax withheld from us by customers; needs the 2307 details received from customers recorded on the Cash Receipt.', ['Philtax']],
+      ['plan', 'Input and Output Tax for e-filing (SLSP)', 'Summary List of Purchases and of Sales per TIN, VAT-able / zero-rated / exempt, in the BIR RELIEF format.', ['Philtax']],
+      ['plan', 'Books of accounts for CAS', 'Sales Journal, Purchase Journal, General Ledger, G/L Register and Inventory Books in BIR book format.', ['Philtax']] ] },
+    { h: 'Other gaps from your current processes', p: 'Not in the build order yet. I suggest fuel first, since LAMI is the pilot.', items: [
+      ['plan', 'Fuel: issue per equipment, daily tank reading, reorder alert at 80,000 L', 'Replaces the Daily Fuel Monitoring Excel.', ['Gap 19', 'Decision 15']],
+      ['plan', 'Non-commercial (TOY) ore tracked at zero cost', 'Cost added when reclassified to commercial.', ['Gap 22', 'Decision 16']],
+      ['plan', '3-way match check on Purchase Invoices', 'PO vs receipt vs invoice, with a tolerance.', ['Gap 11']],
+      ['plan', 'Purchase Return Order and return shipment', 'Warn after 7 days, allow with a reason.', ['Gap 10', 'Decision 13']],
+      ['plan', 'Attachments', 'Scanned DR/SI on receipts, contracts on POs, documents on requests (ERS also lacked this).', ['Gap 7', 'Gap 6']],
+      ['plan', 'Service contracts on the PO', 'Contract file and notarization date.', ['Gap 6']],
+      ['plan', 'Transmittal and gate pass printout from Transfer Orders', 'For Lambert/Alabang to mine transfers.', ['Gap 9', 'Decision 18']],
+      ['plan', 'Notifications and email', 'A notification centre with read / unread and categories, and per-user choices (submitted, approved, rejected, released, low budget, inventory), as in ERS. Today the ERP only shows counts on the menu.', ['Found in testing', 'ERS settings']],
+      ['plan', 'Reorder level and low-stock alert', 'Minimum stock per item and location, with an alert to Supply Chain; also the preferred supplier. Needed for the fuel alert at 80,000 L.', ['ERS settings', 'Decision 15']],
+      ['plan', 'Change Log filters and details', 'Filter the audit trail by user, module, action and date, and open the details of each change.', ['ERS settings']],
+      ['plan', '"Request a new item" from New Request', 'Employees can only request items already in the item list. The request goes to Supply Chain to create the item, which then passes the existing item approval (ICT Head → Accounting Manager, as in your Business Central workflow).', ['Found in testing', 'Item review']],
+      ['plan', 'Remaining printouts', 'Cheque voucher, MRF/MIF, PR and receiving report in your format. These samples were not in the forms you sent.', ['Gap 14']],
+      ['plan', 'Official receipts and invoices printed by the ERP', 'Only after BIR registration.', ['Gap 31', 'Decision 25']],
+      ['plan', 'Buyer prospect list on the customer card', 'Low priority.', ['Gap 25']],
+      ['plan', 'Truck scale ticket import', 'Instead of keying ore movements.', ['Gap 21']],
+      ['plan', 'Item aging and redeployment before disposal', 'From the scrap disposal assessment (WS-01 to WS-03).', ['Gap 32']] ] },
+    { h: 'From the earlier plan (before the process documents)', p: 'Still open.', items: [
+      ['plan', 'Recurring journals and allocations', '', ['Earlier plan']],
+      ['plan', 'Accounting periods and year-end close', 'Open or close each month (as ERS does for requests); nothing posts to a closed month; year-end close.', ['Earlier plan', 'ERS settings']],
+      ['plan', 'Fixed asset revaluation, write-down and appreciation', '', ['Earlier plan']],
+      ['plan', 'Lot, serial and expiry tracking', '', ['Earlier plan']],
+      ['plan', 'Consolidation across different charts of accounts', 'Mining, Land and Tankering use different charts; needs account mapping.', ['Earlier plan']],
+      ['plan', 'Operations modules', 'Fleet, maintenance work orders, dispatch; Tankering voyages; mining production and hauling; land and property.', ['Earlier plan']],
+      ['plan', 'Go-live: parallel run with Business Central and migration of open balances', '', ['Earlier plan']] ] },
+    { h: 'Process changes only (the ERP already supports these)', p: 'No development needed; your people start using the ERP instead of Excel or paper.', items: [
+      ['proc', 'Lambert/Alabang to mine transfers as Transfer Orders', '', ['Gap 9', 'Decision 18']],
+      ['proc', 'Intercompany purchase invoices from the IC Inbox', 'No more re-keying.', ['Gap 12']],
+      ['proc', 'Cycle counts in the ERP by bin', '', ['Gap 18']],
+      ['proc', 'Fuel sales to LLRI, LAMI and outside customers invoiced in the ERP', '', ['Gap 20', 'Decision 15']],
+      ['proc', 'Scrap and obsolete sales by sales invoice; asset sales by fixed asset disposal', '', ['Gap 32', 'Gap 33', 'Decision 22']],
+      ['proc', 'Advances to suppliers stay in their own account', 'Define how Accounting nets them against the final invoice.', ['Decision 12']],
+      ['proc', 'Ore extraction costing stays on the Purchase Invoice method', '', ['Decision 17']] ] },
+    { h: 'Needs data or other people (not development)', p: 'These block go-live even when the software is ready.', items: [
+      ['data', 'VAT setup for export ore sales', 'Accounting to decide. The O2C sample (BI-0000003) took 12% output VAT on an export sale: buyer group 0VAT × ore item group 12GVAT is 12% in the VAT Posting Setup (only 0GVAT / 0SVAT are zero-rated), and foreign buyers have "Prices Including VAT" ticked, so revenue was understated. Options: zero-rated VAT group on export invoices or on the ore items for foreign buyers; untick Prices Including VAT on foreign buyers. Then correct BI-0000003 with a credit memo.', ['Found in testing', 'O2C documentation']],
+      ['data', 'Issuance Accounts for the 30 Mining item groups', 'Accounting. Until filled, LAMI requests can be approved but not released.', ['Found in testing']],
+      ['data', 'Inventory Adjmt. accounts in the Business Central posting setup', 'Blank for most item groups, so counts and adjustments also cannot post.', ['Found in testing']],
+      ['data', 'Who owns the setup', 'Name the process owner who will maintain roles, approval rules and forms once they are set up by users.', ['Found in review']],
+      ['data', 'PO and Purchase Invoice approvers: matrix or decisions 7–8', 'Your current matrix (PO: Supply Chain Specialist → Supply Chain & Admin Head; PI: A/P → GA Supervisor → EA to the President → Accounting Manager) differs from decisions 7–8. With the approval designer you can set either.', ['Approval matrix', 'Decision 7', 'Decision 8']],
+      ['data', 'Users: who reports to whom', 'The roles file gives names, positions, departments and business units; the reporting line (immediate superior) is still needed.', ['Roles file', 'Decision 7']],
+      ['data', 'Companies', 'Set Tankering\'s legal name to Petrolift Inc. (from its forms). Decide whether Sta. Cruz Mineral Port Corporation (SMPC), TSMI and KTI become companies in the ERP. The Tankering report shows Tankering runs as three companies (Petrolift, Transoil, TSMI) while the ERP has one "TANK".', ['Forms', 'Roles file', 'Tankering report']],
+      ['data', 'VAT on export ore and the deposit account', 'Accounting: foreign buyers get 12% VAT on NICKEL in your Business Central setup; confirm 2124080 Advances from Customers for deposits.', ['Found in testing']],
+      ['data', 'Item clean-up by Supply Chain', 'Duplicate descriptions (11 in Mining, 2,157 in Tankering); stock items that should be Service or Non-Inventory (for example Barangay Clearance, Business Permit); decide which items employees may request.', ['Item review']],
+      ['data', 'Item costs', 'Every stock item has unit cost 0 in all three item lists. Accounting loads the last purchase prices from Business Central, or estimates stay unknown until the first purchase is posted.', ['Item review']],
+      ['data', 'Master data fixes','Land items missing Gen. Prod. groups; Land vendor S0000093 currency "COD"; Tankering YEN/EUR/SGD exchange rates; a USD exchange rate before posting USD invoices.', ['Earlier plan']],
+      ['data', 'Hosting and company sign-in', 'ICT: server or cloud, Microsoft 365 sign-in, backups.', ['Decision 26']],
+      ['data', 'BIR registration of the system', 'Tax adviser.', ['Decision 25']],
+      ['data', 'Missing process documents and sample forms', 'Richard Coles: General Ledger, Fixed Assets, CPD-SC-001, CPD-HR-001-01, Land, Tankering. Samples still missing: PR, MRF/MIF, WRR, canvass sheet, cheque voucher, a signed NOSPA, bank statement CSV.', ['Earlier plan']] ] }
+  ];
+  var filter = 'all';
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  var counts = {}; SECTIONS.forEach(function (s) { s.items.forEach(function (i) { counts[i[0]] = (counts[i[0]] || 0) + 1; }); });
+  var total = 0; Object.keys(counts).forEach(function (k) { total += counts[k]; });
+  document.getElementById('tiles').innerHTML = ['done', 'next', 'plan', 'proc', 'data'].map(function (k) { return '<div class="tile"><b>' + (counts[k] || 0) + '</b><span>' + S[k][1] + '</span></div>'; }).join('');
+  function renderFilters() {
+    var opts = [['all', 'All (' + total + ')']].concat(['done', 'next', 'plan', 'proc', 'data'].map(function (k) { return [k, S[k][1]]; }));
+    document.getElementById('filters').innerHTML = opts.map(function (o) { return '<button type="button" data-f="' + o[0] + '" aria-pressed="' + (filter === o[0]) + '">' + esc(o[1]) + '</button>'; }).join('');
+  }
+  function render() {
+    var n = 0;
+    document.getElementById('root').innerHTML = SECTIONS.map(function (s) {
+      var rows = s.items.filter(function (i) { return filter === 'all' || i[0] === filter; });
+      if (!rows.length) return '';
+      return '<section class="card"><h2>' + esc(s.h) + '</h2><p>' + esc(s.p) + '</p><div class="list">' + rows.map(function (i) {
+        n++;
+        return '<div class="row"><span class="n">' + n + '</span><div class="t"><b>' + esc(i[1]) + '</b>' + (i[2] ? '<span>' + esc(i[2]) + '</span>' : '') +
+          '<div class="src">' + i[3].map(function (x) { return '<em>' + esc(x) + '</em>'; }).join('') + '</div></div><span class="st ' + S[i[0]][0] + '">' + S[i[0]][1] + '</span></div>';
+      }).join('') + '</div></section>';
+    }).join('');
+    renderFilters();
+  }
+  document.getElementById('filters').addEventListener('click', function (e) { var b = e.target.closest('button[data-f]'); if (b) { filter = b.dataset.f; render(); } });
+  render();
+})();
+</script>

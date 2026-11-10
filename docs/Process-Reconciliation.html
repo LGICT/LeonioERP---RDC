@@ -1,0 +1,262 @@
+<title>Leonio Process Reconciliation</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a single reading column for the narrative, widening to a full-width register for the matrix */
+:root {
+  --bg: #f6f7f5; --surface: #ffffff; --fg: #1d2421; --muted: #5b6862; --line: #dde3df;
+  --accent: #2f6b55; --accent-soft: #e3efe9;
+  --ok: #2e7d4f; --ok-bg: #e2f2e8; --part: #9a6a07; --part-bg: #fbf0d6; --gap: #b23a2e; --gap-bg: #f9e3e0;
+  --chg: #2f5f9a; --chg-bg: #e2ebf7; --dec: #6b4aa0; --dec-bg: #ece5f6;
+  --display: "Source Serif 4", Georgia, serif; --body: "Public Sans", "Segoe UI", system-ui, sans-serif; --mono: "IBM Plex Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #121715; --surface: #1a211e; --fg: #e4ebe7; --muted: #9aa8a1; --line: #2c3632;
+  --accent: #7cc4a6; --accent-soft: #1f3129;
+  --ok: #7fd3a0; --ok-bg: #1b3326; --part: #e9c46a; --part-bg: #362c14; --gap: #f08a7e; --gap-bg: #3a1f1c;
+  --chg: #8db6ec; --chg-bg: #1b2a3d; --dec: #c3a6ee; --dec-bg: #2a2140; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #121715; --surface: #1a211e; --fg: #e4ebe7; --muted: #9aa8a1; --line: #2c3632;
+  --accent: #7cc4a6; --accent-soft: #1f3129;
+  --ok: #7fd3a0; --ok-bg: #1b3326; --part: #e9c46a; --part-bg: #362c14; --gap: #f08a7e; --gap-bg: #3a1f1c;
+  --chg: #8db6ec; --chg-bg: #1b2a3d; --dec: #c3a6ee; --dec-bg: #2a2140; color-scheme: dark }
+body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 15px; line-height: 1.6; }
+.wrap { max-width: 1180px; margin: 0 auto; padding-block: 40px 72px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 44px; }
+.col { max-width: 760px; display: grid; gap: 14px; min-width: 0; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; line-height: 1.2; }
+h1 { font-size: clamp(28px, 4vw, 38px); }
+h2 { font-size: 24px; }
+h3 { font-size: 17px; }
+p { margin: 0; }
+.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+.lede { color: var(--muted); font-size: 16px; }
+.meta { font-family: var(--mono); font-size: 12.5px; color: var(--muted); }
+ul, ol { margin: 0; padding-left: 22px; display: grid; gap: 8px; }
+b { font-weight: 600; }
+.tally { display: flex; flex-wrap: wrap; gap: 10px; }
+.tally button { font: inherit; font-size: 13.5px; border: 1px solid var(--line); background: var(--surface); color: var(--fg); border-radius: 999px; padding: 6px 14px; cursor: pointer; display: inline-flex; gap: 8px; align-items: center; }
+.tally button[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+.tally button:focus-visible, .seg button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.tally .n { font-family: var(--mono); font-variant-numeric: tabular-nums; font-weight: 500; }
+.chip { display: inline-block; font-size: 12px; font-weight: 600; padding: 2px 9px; border-radius: 999px; white-space: nowrap; }
+.s-ok { color: var(--ok); background: var(--ok-bg); } .s-part { color: var(--part); background: var(--part-bg); }
+.s-gap { color: var(--gap); background: var(--gap-bg); } .s-chg { color: var(--chg); background: var(--chg-bg); } .s-dec { color: var(--dec); background: var(--dec-bg); }
+.matrix { display: grid; gap: 16px; min-width: 0; }
+.tablebox { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; min-width: 980px; font-size: 13.5px; }
+th, td { text-align: left; vertical-align: top; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+th { font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); font-weight: 600; background: var(--bg); position: sticky; top: 0; }
+td.no { font-family: var(--mono); color: var(--muted); font-variant-numeric: tabular-nums; }
+td.proc { font-weight: 600; min-width: 150px; }
+tr.area td { background: var(--accent-soft); font-family: var(--display); font-weight: 700; font-size: 15px; color: var(--fg); }
+tbody tr:last-child td { border-bottom: 0; }
+.options { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+.opt { border: 1px solid var(--line); border-radius: 8px; padding: 16px 18px; background: var(--surface); display: grid; gap: 8px; align-content: start; min-width: 0; }
+.opt.rec { border-color: var(--accent); }
+.opt .tag { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.opt.rec .tag { color: var(--accent); }
+.opt ul { font-size: 14px; gap: 4px; }
+.steps { counter-reset: s; list-style: none; padding: 0; gap: 14px; }
+.steps li { counter-increment: s; display: grid; grid-template-columns: 34px 1fr; gap: 12px; }
+.steps li::before { content: counter(s); font-family: var(--mono); font-weight: 500; width: 30px; height: 30px; border-radius: 50%; background: var(--accent); color: var(--surface); display: grid; place-items: center; font-size: 13px; }
+.dec td:first-child { font-family: var(--mono); color: var(--muted); }
+.dec table { min-width: 720px; }
+.note { border-left: 3px solid var(--part); padding: 4px 0 4px 14px; color: var(--fg); }
+@media (max-width: 600px) { .wrap { gap: 36px; padding-block: 28px 56px; } }
+</style>
+
+<div class="wrap">
+  <header class="col">
+    <span class="eyebrow">Leonio ERP · Process reconciliation</span>
+    <h1>Current processes, Luis's LG-ERP and our ERP, side by side</h1>
+    <p class="lede">I compared the 65 documents you shared (as-is processes for Procure-to-Pay, Order-to-Cash, Inventory and part of Cash Management, plus the LG-ERP documentation) against the signed Business Central flows and the ERP we are building.</p>
+    <p class="meta">Prepared 8 Nov 2026 · Sources: CPD-SCM-001, CPD-ASS-002/003, CPD-TRY-001/002/003, CPD-SCW-001/002/003, MNG-VP-001, MNG-MSO-001, LUIS-01 to LUIS-12</p>
+  </header>
+
+  <section class="col">
+    <span class="eyebrow">Summary</span>
+    <h2>What I found</h2>
+    <ul>
+      <li><b>Every process document says it is the "baseline for the LG-ERP conversion."</b> Your Management Systems team is preparing these processes for Luis's system, not for this one. Two ERP projects are aiming at the same goal. That is the first thing management has to settle.</li>
+      <li><b>Most of what your people do inside Business Central today is already in our ERP</b>, because we copied Business Central. Of the 35 process steps I mapped, 8 match, 7 are already supported but need your people to change how they work, and 6 are partly there.</li>
+      <li><b>The real gaps are the steps your people do outside Business Central</b>: material issuance in Excel, fuel monitoring, pro forma deposit invoices, the NOSPA, scrap sales, the Cash Position Report, vendor accreditation and canvassing. 12 gaps in total.</li>
+      <li><b>LG-ERP is stronger at the front of Procure-to-Pay</b>: vendor accreditation, multi-vendor RFQ with technical review, the Approved Service Report and 3-way match. These are good designs and we should adopt them.</li>
+      <li><b>LG-ERP is weak on accounting and controls.</b> Its own code review says only payment runs post to the general ledger, credit notes change no amounts, permissions are mostly not checked, and at least 12 routes need no sign-in. Our ERP has the full Business Central posting engine, inventory costing, treasury, intercompany and foreign currency.</li>
+      <li><b>Our ERP is still a prototype.</b> It runs on one PC, has no logins and no real database. Before go-live it needs both, whichever platform you choose.</li>
+    </ul>
+  </section>
+
+  <section class="matrix">
+    <div class="col">
+      <span class="eyebrow">Reconciliation matrix</span>
+      <h2>35 process steps, mapped</h2>
+      <p class="lede">Click a status to show only those rows.</p>
+    </div>
+    <div class="tally" role="group" aria-label="Filter by status">
+      <button id="f-all" data-f="all" aria-pressed="true">All <span class="n">35</span></button>
+      <button id="f-ok" data-f="ok" aria-pressed="false"><span class="chip s-ok">Matched</span><span class="n">8</span></button>
+      <button id="f-chg" data-f="chg" aria-pressed="false"><span class="chip s-chg">Process change</span><span class="n">7</span></button>
+      <button id="f-part" data-f="part" aria-pressed="false"><span class="chip s-part">Partial</span><span class="n">6</span></button>
+      <button id="f-gap" data-f="gap" aria-pressed="false"><span class="chip s-gap">Gap</span><span class="n">12</span></button>
+      <button id="f-dec" data-f="dec" aria-pressed="false"><span class="chip s-dec">Decision</span><span class="n">2</span></button>
+    </div>
+    <p class="meta"><b>Matched</b> = our ERP already does it the way the signed BC flow says. <b>Process change</b> = our ERP can do it, but today it is done in Excel or on paper. <b>Partial</b> = some pieces missing. <b>Gap</b> = not in our ERP yet. <b>Decision</b> = management must choose first.</p>
+    <div class="tablebox">
+      <table id="mx">
+        <thead><tr><th>#</th><th>Process step</th><th>How it is done today</th><th>LG-ERP (Luis)</th><th>Our ERP</th><th>Status</th><th>What to do</th></tr></thead>
+        <tbody>
+          <tr class="area"><td colspan="7">Procure-to-Pay</td></tr>
+          <tr data-s="gap"><td class="no">1</td><td class="proc">Vendor onboarding and accreditation</td><td>Vendor card in BC; permits and documents on paper or email</td><td>Onboarding, accreditation documents, banking, performance rating, renewals</td><td>Vendor card as in BC, TIN check; no accreditation</td><td><span class="chip s-gap">Gap</span></td><td>Adopt LG-ERP design: accreditation status, required documents with expiry dates, renewal reminders, vendor rating.</td></tr>
+          <tr data-s="gap"><td class="no">2</td><td class="proc">Changes to vendor/customer bank details and payment terms</td><td>Accounting Shared Manager approves; System Admin encodes; Treasury checks</td><td>Vendor banking screen, but no sign-in check on that route</td><td>Changes are logged in the Change Log, but nobody approves them</td><td><span class="chip s-gap">Gap</span></td><td>Add an approval step for bank-detail and payment-term changes; only the System Admin role may edit.</td></tr>
+          <tr data-s="part"><td class="no">3</td><td class="proc">Purchase Request</td><td>PR form shows stock on hand, approved budget, running cost, remaining balance</td><td>PR with budget reserve and commit</td><td>Purchase Requisition with approvals; Budget vs. Actual report</td><td><span class="chip s-part">Partial</span></td><td>Show stock on hand and remaining budget on the PR; reserve budget when the PR is approved. ERS already has this budget check for requisitions.</td></tr>
+          <tr data-s="gap"><td class="no">4</td><td class="proc">Canvass / RFQ</td><td>Canvass sheet; SC Manager then SC VP approve</td><td>RFQ to several vendors, quote comparison, technical review, award</td><td>One Purchase Quote per vendor; no comparison</td><td><span class="chip s-gap">Gap</span></td><td>Adopt LG-ERP design: RFQ to many vendors, comparison sheet, technical review, award creates the PO.</td></tr>
+          <tr data-s="ok"><td class="no">5</td><td class="proc">Purchase Order approval</td><td>SC Manager then SC VP in BC, plus a wet signature from CLG</td><td>Dual approval (code review: creator can be sent as approver)</td><td>Approval rules by role with segregation of duties</td><td><span class="chip s-ok">Matched</span></td><td>Set the approvers. Decide whether CLG's wet signature becomes an electronic approval.</td></tr>
+          <tr data-s="gap"><td class="no">6</td><td class="proc">Service contracts</td><td>Contract drafted, signed and notarized outside the system</td><td>Not covered</td><td>Not covered</td><td><span class="chip s-gap">Gap</span></td><td>Small: attach the contract to the PO and record the notarization date.</td></tr>
+          <tr data-s="ok"><td class="no">7</td><td class="proc">Receiving of goods</td><td>Warehouse Receipt in BC, plus Excel WRR (double entry); DR/PO/SI scanned and emailed</td><td>Goods Receipt Note</td><td>Warehouse Receipt, Put-away, Posted Receipt with bins</td><td><span class="chip s-ok">Matched</span></td><td>Stop the Excel WRR. Attach the scanned DR/SI to the receipt.</td></tr>
+          <tr data-s="part"><td class="no">8</td><td class="proc">Acceptance of services</td><td>Certificate of completion on paper before the invoice</td><td>Approved Service Report (ASR)</td><td>"Receive" service lines on the PO</td><td><span class="chip s-part">Partial</span></td><td>Adopt LG-ERP's ASR: end user accepts the service in the system before AP can invoice.</td></tr>
+          <tr data-s="chg"><td class="no">9</td><td class="proc">Lambert/Alabang to LAMI stock transfer</td><td>Transmittal and gate pass; no transfer in BC</td><td>Not covered</td><td>Transfer Order with in-transit location</td><td><span class="chip s-chg">Process change</span></td><td>Use Transfer Orders; print transmittal and gate pass from the ERP.</td></tr>
+          <tr data-s="part"><td class="no">10</td><td class="proc">Purchase returns</td><td>Return within 7 days; credit memo in BC</td><td>Credit notes (code review: they change no amounts)</td><td>Purchase Credit Memo with cost reversal</td><td><span class="chip s-part">Partial</span></td><td>Add Return Order and Return Shipment, with a 7-day warning.</td></tr>
+          <tr data-s="part"><td class="no">11</td><td class="proc">Purchase Invoice processing (services, materials)</td><td>PI in BC; approval Supervisor then Manager (the 2021 matrix says 3 levels)</td><td>Invoice with 3-way match</td><td>PI from PO and receipt; EWT at invoice; approvals</td><td><span class="chip s-part">Partial</span></td><td>Add a 3-way match check with tolerance. Confirm the approval levels.</td></tr>
+          <tr data-s="chg"><td class="no">12</td><td class="proc">Intercompany Purchase Invoice</td><td>PI keyed by hand from the affiliate's sales invoice</td><td>Not covered</td><td>IC Inbox creates the PI from the partner's sales invoice</td><td><span class="chip s-chg">Process change</span></td><td>Use the IC Inbox instead of re-keying.</td></tr>
+          <tr data-s="gap"><td class="no">13</td><td class="proc">Advances to suppliers</td><td>PI posted to "Advances to Supplier"; netting against the final invoice not described</td><td>Not covered</td><td>Manual General Journal</td><td><span class="chip s-gap">Gap</span></td><td>Add prepayment on the PO, netted automatically on the final invoice.</td></tr>
+          <tr data-s="ok"><td class="no">14</td><td class="proc">Payment processing</td><td>Payment Journal, Treasury Manager approves, then cheque voucher, cheque, telex</td><td>Payment runs (the only module that posts to the GL)</td><td>Payment Journal with approvals, CWT, cheque no., bank ledger, foreign currency</td><td><span class="chip s-ok">Matched</span></td><td>Add printable cheque voucher and cheque.</td></tr>
+          <tr data-s="ok"><td class="no">15</td><td class="proc">Voiding cheques</td><td>Treasury Manager approves; Void Only or Unapply and Void</td><td>Not covered</td><td>Void and Unapply-and-Void</td><td><span class="chip s-ok">Matched</span></td><td>None.</td></tr>
+
+          <tr class="area"><td colspan="7">Inventory Management</td></tr>
+          <tr data-s="gap"><td class="no">16</td><td class="proc">Issuance of materials (MRF/MIF)</td><td>Excel only; BC on-hand is never reduced, so BC overstates stock</td><td>Inventory module (partial)</td><td>Item Journal negative adjustment only</td><td><span class="chip s-gap">Gap</span></td><td><b>Highest priority.</b> Add a Material Request and Issue document charged to the equipment or department. <b>Start from your ERS</b>, which already does this flow.</td></tr>
+          <tr data-s="chg"><td class="no">17</td><td class="proc">Running stock balance</td><td>Excel Warehouse Inventory Tracker</td><td>Stock levels</td><td>Item ledger, bin contents, inventory valuation</td><td><span class="chip s-chg">Process change</span></td><td>Retire the Excel tracker once issuance (#16) is in the ERP.</td></tr>
+          <tr data-s="chg"><td class="no">18</td><td class="proc">Cycle counts</td><td>6–7 bins counted daily; weekly and month-end reports in Excel</td><td>Not covered</td><td>Phys. Inventory Journal by bin</td><td><span class="chip s-chg">Process change</span></td><td>Count in the ERP by bin; reports come from the system.</td></tr>
+          <tr data-s="gap"><td class="no">19</td><td class="proc">Fuel receiving and dispensing</td><td>Fuel tickets, Daily Fuel Monitoring (Excel), daily dip-stick reading, 80,000 L safety stock checked by hand</td><td>Not covered</td><td>Fuel is an inventory item; no fuel ticket or tank reading</td><td><span class="chip s-gap">Gap</span></td><td>Fuel issuance per equipment, daily tank reading, reorder alert at the safety stock.</td></tr>
+          <tr data-s="chg"><td class="no">20</td><td class="proc">Fuel sales to LLRI, LAMI and outside customers</td><td>Recorded outside the ERP</td><td>Not covered</td><td>Sales Invoice; intercompany outbox to LLRI/LAMI</td><td><span class="chip s-chg">Process change</span></td><td>Invoice all fuel sales in the ERP.</td></tr>
+          <tr data-s="ok"><td class="no">21</td><td class="proc">Ore movements MINE → MOY → POY → Vessel</td><td>BC Transfer Orders and Item Journals; Excel Working Inventory File; Truck Scale Database</td><td>Not covered</td><td>Transfer Orders and Item Journals</td><td><span class="chip s-ok">Matched</span></td><td>Later: import truck scale tickets instead of keying them.</td></tr>
+          <tr data-s="dec"><td class="no">22</td><td class="proc">Non-commercial ore (TOY)</td><td>Kept outside the books until reclassified, then a cost adjustment</td><td>Not covered</td><td>Not covered</td><td><span class="chip s-dec">Decision</span></td><td>Management decides whether TOY ore is tracked in the ERP (for example at zero cost).</td></tr>
+          <tr data-s="dec"><td class="no">23</td><td class="proc">Ore extraction costing</td><td>A Purchase Invoice built from weekly extraction quantity × equipment cost per WMT</td><td>Not covered</td><td>The same workaround works; item charges also available</td><td><span class="chip s-dec">Decision</span></td><td>Keep the Purchase Invoice method, or switch to a production output journal.</td></tr>
+          <tr data-s="ok"><td class="no">24</td><td class="proc">Ore physical count and grading</td><td>Count in BC; grading and approval on paper</td><td>Not covered</td><td>Phys. Inventory Journal with approval</td><td><span class="chip s-ok">Matched</span></td><td>Approve counts in the ERP.</td></tr>
+
+          <tr class="area"><td colspan="7">Order-to-Cash</td></tr>
+          <tr data-s="gap"><td class="no">25</td><td class="proc">Buyer prospecting and buyer pool</td><td>Email and a separate database</td><td>Not covered</td><td>Customer card only</td><td><span class="chip s-gap">Gap</span></td><td>Low priority: prospect status and meeting notes on the customer.</td></tr>
+          <tr data-s="gap"><td class="no">26</td><td class="proc">NOSPA (sales contract)</td><td>Drafted, amended and approved by email; notarized; terms re-typed for every invoice</td><td>Not covered</td><td>Not covered</td><td><span class="chip s-gap">Gap</span></td><td>Add a Sales Contract: price, grade, volume, laycan, shipment no., deposit schedule.</td></tr>
+          <tr data-s="gap"><td class="no">27</td><td class="proc">Pro forma invoices: Deposit 1, Deposit 2, Provisional</td><td>Prepared outside BC; approved by email</td><td>Not covered</td><td>Not covered</td><td><span class="chip s-gap">Gap</span></td><td>Prepayment invoices generated from the contract milestones, approved in the ERP.</td></tr>
+          <tr data-s="part"><td class="no">28</td><td class="proc">Final payment invoice</td><td>Sales Order and Sales Invoice in BC; a separate Sales Order for quantities above 50 WMT</td><td>Not covered</td><td>Sales Invoice only; no Sales Order yet</td><td><span class="chip s-part">Partial</span></td><td>Add Sales Order. Confirm whether the 50 WMT limit is a real rule or a BC workaround.</td></tr>
+          <tr data-s="part"><td class="no">29</td><td class="proc">Deposits vs. total charges; refund or extra billing</td><td>VP decides by hand</td><td>Not covered</td><td>Cash receipts, apply entries, customer refunds</td><td><span class="chip s-part">Partial</span></td><td>Add a settlement statement per contract that shows deposits, charges and the balance.</td></tr>
+          <tr data-s="ok"><td class="no">30</td><td class="proc">Recording collections</td><td>Bank slip by email; confirmed by phone; Cash Receipt Journal; Cash Position Report in Excel</td><td>Not covered</td><td>Cash Receipt Journal with approval, bank ledger, cash flow forecast</td><td><span class="chip s-ok">Matched</span></td><td>Add a daily Cash Position report so the Excel file can stop.</td></tr>
+          <tr data-s="gap"><td class="no">31</td><td class="proc">Official / acknowledgement receipt</td><td>Issued after posting</td><td>Not covered</td><td>Not printed</td><td><span class="chip s-gap">Gap</span></td><td>OR/AR printing with BIR-registered numbering.</td></tr>
+          <tr data-s="chg"><td class="no">32</td><td class="proc">Scrap and obsolete material sales</td><td>No sales document; cash collected at site and passed through the RM's Secretary</td><td>Not covered</td><td>Sales Invoice for scrap items; cash receipts</td><td><span class="chip s-chg">Process change</span></td><td>Invoice scrap in the ERP; record site collections the same day.</td></tr>
+          <tr data-s="chg"><td class="no">33</td><td class="proc">Company asset sales (auction)</td><td>Not linked to the fixed-asset register</td><td>Not covered</td><td>Fixed Asset Disposal posts gain or loss</td><td><span class="chip s-chg">Process change</span></td><td>Dispose the asset in the ERP when the Deed of Sale is signed.</td></tr>
+
+          <tr class="area"><td colspan="7">Cash Management</td></tr>
+          <tr data-s="ok"><td class="no">34</td><td class="proc">Bank accounts and payment methods</td><td>Set up in BC by Treasury</td><td>Not covered</td><td>Bank accounts and payment methods, imported from BC</td><td><span class="chip s-ok">Matched</span></td><td>None.</td></tr>
+          <tr data-s="gap"><td class="no">35</td><td class="proc">Bank statement import and matching</td><td>Format set up in BC but not used; payments confirmed by phone</td><td>Not covered</td><td>Manual bank reconciliation</td><td><span class="chip s-gap">Gap</span></td><td>Import the bank's CSV statement and match it automatically.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="col">
+    <span class="eyebrow">Your Enterprise Requisition System (ERS)</span>
+    <h2>ERS fills the biggest inventory gap</h2>
+    <p>ERS lets an employee request items from the catalog. The department approver approves, Supply Chain reviews, then the items are released and stock goes down. That is the MRF/MIF issuance in CPD-SCW-002-01, which today lives in Excel and never reaches the books (gap #16). ERS also checks each request against the department budget (part of #3).</p>
+    <h3>What to adopt as it is</h3>
+    <ul>
+      <li><b>The requestor screens.</b> New Request with catalog search, My Requests, drafts, Request Changes, cancel and duplicate. Neither our ERP nor LG-ERP has screens this simple for ordinary employees.</li>
+      <li><b>Budget commitment.</b> A request reserves budget while it is open and consumes it when released, with warning (80%) and critical (95%) thresholds and alerts. Our ERP only compares budget with actuals after posting.</li>
+      <li><b>Notifications and low-stock alerts</b> to approvers and Supply Chain, and the 7 requisition reports.</li>
+      <li><b>Departments and cost centers</b>, which map directly to the ERP's Department and Cost Center dimensions.</li>
+    </ul>
+    <h3>What has to change before it can connect to the ERP</h3>
+    <ul>
+      <li><b>Use the ERP item list.</b> ERS has its own codes (ITEM-OS-0001) and one stock figure per item. It must use the Business Central item numbers and show stock per location and bin.</li>
+      <li><b>Know the company.</b> ERS has no company field. It needs ADMIN, LAND, LLRI, LAMI and TANK, because each one has its own stock and books.</li>
+      <li><b>Post the release.</b> Release should post an issue in the ERP, at average cost, to the expense account, department and equipment. Today it only lowers a number in ERS.</li>
+      <li><b>Turn shortages into purchases.</b> If stock is short, Supply Chain should create a Purchase Requisition from the request in one click.</li>
+      <li><b>Route by workflow.</b> The Asset and High Value (above ₱50,000) workflows are saved but not used yet. Every request takes the Standard route.</li>
+      <li><b>Budget by account, not only by category.</b> ERS budgets are department × category at catalog price. The ERP budgets by G/L account and dimension. Use one budget source, the ERP's, and let ERS read it.</li>
+      <li><b>Add attachments, real logins and a shared database.</b> Today ERS saves to one browser and anyone can switch users. Our ERP has the same limit.</li>
+    </ul>
+    <h3>How it fits</h3>
+    <p>Make ERS the employee-facing requisition module of the one company ERP, not a separate system. Employees request in ERS. Released requests post to inventory in the ERP. Shortages become Purchase Requisitions that continue into Procure-to-Pay (canvass, PO, receipt, invoice, payment). Items, departments, cost centers, users and budgets come from the ERP master data, so nothing is typed twice.</p>
+    <p>ERS and our ERP are both plain browser apps built the same way, so joining them is straightforward. LG-ERP has its own Purchase Request module (M2), which overlaps with ERS. Include this in Decision 1.</p>
+  </section>
+
+  <section class="col">
+    <span class="eyebrow">Decision 1 of 15</span>
+    <h2>Which system becomes the company ERP?</h2>
+    <p>Running two ERP projects in parallel will cost twice and confuse users. Management should pick one of these, with Luis and Richard Coles in the room.</p>
+  </section>
+  <div class="options">
+    <div class="opt">
+      <span class="tag">Option A</span>
+      <h3>Our ERP is the platform</h3>
+      <ul><li>Keep the Business Central accounting we already built and tested.</li><li>Copy LG-ERP's good designs into it: accreditation, RFQ with technical review, ASR, 3-way match.</li><li>Still needs logins and a real database before go-live.</li></ul>
+    </div>
+    <div class="opt">
+      <span class="tag">Option B</span>
+      <h3>LG-ERP is the platform</h3>
+      <ul><li>Already has logins and a PostgreSQL database.</li><li>Must add everything outside Procure-to-Pay: posting engine, inventory costing, sales, treasury, intercompany, foreign currency, fixed assets.</li><li>Must fix the security findings in its own code review first.</li></ul>
+    </div>
+    <div class="opt rec">
+      <span class="tag">My recommendation</span>
+      <h3>One system, built from both</h3>
+      <ul><li>Use our ERP as the working specification for accounting, inventory, treasury and intercompany. It already behaves like Business Central and is tested.</li><li>Use LG-ERP's Procure-to-Pay screens and its production setup (logins, database).</li><li>One team, one codebase, one go-live plan.</li></ul>
+    </div>
+  </div>
+
+  <section class="col dec">
+    <span class="eyebrow">Decisions for management</span>
+    <h2>The other 14 questions to answer</h2>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>#</th><th>Question</th><th>Why it matters</th><th>Who decides</th></tr></thead>
+        <tbody>
+          <tr><td>2</td><td>Purchase Invoice approval: 2 levels (Supervisor, Manager) or the 3-level 2021 matrix? Amount limits?</td><td>The documents and the matrix disagree</td><td>Accounting Shared Manager, CFO</td></tr>
+          <tr><td>3</td><td>PO approval: keep CLG's wet signature, or approve electronically?</td><td>Wet signatures slow the PO and cannot be audited in the system</td><td>SC VP, CLG</td></tr>
+          <tr><td>4</td><td>Canvass rules: how many quotes, and above what amount is a technical review required?</td><td>Needed to build the RFQ (#4)</td><td>SC VP</td></tr>
+          <tr><td>5</td><td>Move material issuance (MRF/MIF) into the ERP and stop the Excel tracker? From what date?</td><td>Today the books overstate stock</td><td>Warehouse Supervisor, BU Accounting</td></tr>
+          <tr><td>6</td><td>Track fuel per equipment, and invoice fuel sales to LLRI/LAMI as intercompany sales?</td><td>Fuel is a large cost and today sits in Excel</td><td>Operations, Accounting</td></tr>
+          <tr><td>7</td><td>Track non-commercial (TOY) ore in the ERP?</td><td>Stock exists physically but not in the books</td><td>Resident Manager, Accounting</td></tr>
+          <tr><td>8</td><td>Ore extraction costing: keep the Purchase Invoice method or use a production journal?</td><td>Inventory value is currently entered as a purchase</td><td>CFO</td></tr>
+          <tr><td>9</td><td>Is the 50 WMT per invoice limit a real rule?</td><td>If it is a BC workaround, we should not copy it</td><td>VP, Accounting Shared Supervisor</td></tr>
+          <tr><td>10</td><td>Record Deposit 1, Deposit 2 and Provisional as prepayment invoices in the ERP?</td><td>Deposits are invisible until collected</td><td>VP, Accounting Shared Manager</td></tr>
+          <tr><td>11</td><td>Advances to suppliers: prepayment on the PO, or keep the separate account?</td><td>Netting against the final invoice is not defined</td><td>Accounting Shared Manager, Treasury</td></tr>
+          <tr><td>12</td><td>Require a sales document for scrap and obsolete sales, and an FA disposal for asset sales?</td><td>Cash today is not tied to any sale or asset</td><td>Site Head, Accounting</td></tr>
+          <tr><td>13</td><td>Which document controls the Lambert-to-mine transfer: CPD-SCW-002-03 or CPD-SCW-003-02?</td><td>Two documents describe the same process</td><td>Management Systems</td></tr>
+          <tr><td>14</td><td>Will the ERP print official receipts and invoices?</td><td>A system that issues receipts and invoices must be registered with the BIR; check with your tax adviser</td><td>CFO, Tax</td></tr>
+          <tr><td>15</td><td>What is the target ("to-be") process for each of the 35 steps?</td><td>All these documents describe the as-is process only</td><td>Process owners, Management Systems</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="col">
+    <span class="eyebrow">For you</span>
+    <h2>What to do next</h2>
+    <ol class="steps">
+      <li><div><b>Share this page with management, Luis and Richard Coles</b> and get Decision 1 settled. Everything else depends on it.</div></li>
+      <li><div><b>Give each of the other 14 questions an owner and a date.</b> Most need 15 minutes with the right person.</div></li>
+      <li><div><b>Collect the missing documents.</b> Record-to-Report / General Ledger, Fixed Assets, CPD-SC-001 (scrap bidding and payment collection), CPD-HR-001-01 (NOSPA approval and notarization), the 2021 approval matrix, and the Land and Tankering processes.</div></li>
+      <li><div><b>Collect sample forms</b>: PR form, MRF/MIF, WRR, canvass sheet, cheque voucher, official receipt, pro forma invoice, NOSPA, and one bank statement CSV from each bank.</div></li>
+      <li><div><b>Then tell me to resume.</b> If the decisions go the way I recommend, I would build in this order: Material Issue (#16), by joining your ERS to the ERP, Sales Contract with deposit invoices and Sales Order (#26–28), vendor accreditation with bank-change approval (#1–2), RFQ with technical review (#4), Service Acceptance (#8), Cash Position report and bank statement import (#30, #35), then logins and a real database.</div></li>
+    </ol>
+    <p class="note">The source documents have some errors to fix before they become the reference: mistyped sub-process codes in CPD-SCW-002 and MNG-MSO-001, three unfinished ore sheets, the Cash Management workbook still unsigned with durations shown as "xx minutes", and CPD-SCW-001-02 pointing to CPD-TRY-001-03 instead of -04.</p>
+  </section>
+</div>
+
+<script>
+(function () {
+  var btns = document.querySelectorAll('.tally button');
+  var rows = document.querySelectorAll('#mx tbody tr');
+  function apply(f) {
+    btns.forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.f === f ? 'true' : 'false'); });
+    var areaVisible = null;
+    rows.forEach(function (r) {
+      if (r.classList.contains('area')) { r.hidden = false; return; }
+      r.hidden = !(f === 'all' || r.dataset.s === f);
+    });
+    // hide area headings with no visible rows
+    var groups = []; var cur = null;
+    rows.forEach(function (r) { if (r.classList.contains('area')) { cur = { h: r, n: 0 }; groups.push(cur); } else if (!r.hidden && cur) cur.n++; });
+    groups.forEach(function (g) { g.h.hidden = g.n === 0; });
+  }
+  btns.forEach(function (b) { b.addEventListener('click', function () { apply(b.dataset.f); }); });
+})();
+</script>

@@ -1,0 +1,16 @@
+f01.xlsx = Tankering-General Journal Template.xlsx
+f02.xlsx = Tankering-Physical Inventory Journal Template.xlsx
+f03.xlsx = Tankering_Bank.xlsx
+f04.xlsx = Tankering_Chart of Accounts V.2.xlsx
+f05.xlsx = Tankering_Currency.xlsx
+f06.xlsx = Tankering_Dimensions.xlsx
+f07.xlsx = Tankering_FA posting and Emp Posting.xlsx
+f08.xlsx = Tankering_Fixed assets.xlsx
+f09.xlsx = Tankering_Gen Posting V.3.xlsx
+f10.xlsx = Tankering_Inventory V.4 - with changes.xlsx
+f11.xlsx = Tankering_Location.xlsx
+f12.xlsx = Tankering_No Series V.2.xlsx
+f13.xlsx = Tankering_Purchasing V.3.xlsx
+f14.xlsx = Tankering_Receivables V.2.xlsx
+f15.xlsx = Tankering_VAT V.2.xlsx
+f16.xlsx = Tankering_WHTax.xlsx

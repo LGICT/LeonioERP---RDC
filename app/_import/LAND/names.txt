@@ -1,0 +1,14 @@
+f01.xlsx = Land-General Journal Template.xlsx
+f02.xlsx = Land_Banksv.2.xlsx
+f03.xlsx = Land_Chart of Accountsv.1.xlsx
+f04.xlsx = Land_Currencyv.1.xlsx
+f05.xlsx = Land_Dimensionsv.2.xlsx
+f06.xlsx = Land_Fixed Assetsv.4_LLHI.xlsx
+f07.xlsx = Land_Gen Postingv.3.xlsx
+f08.xlsx = Land_Inventoryv.6.xlsx
+f09.xlsx = Land_Locationv.1.xlsx
+f10.xlsx = Land_No Seriesv.3.xlsx
+f11.xlsx = Land_Receivablesv.2.xlsx
+f12.xlsx = Land_VATv.4.xlsx
+f13.xlsx = Land_Vendorv.6.xlsx
+f14.xlsx = Land_WHTv.1.xlsx

@@ -1,0 +1,304 @@
+<title>Leonio ERP Order-to-Cash</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a technical manual. Left table of contents on wide screens, one reading column; each module is a numbered chapter (LEO-P2P-0x) like the LUIS-0x pages. */
+:root {
+  --bg: #f6f7f9; --paper: #ffffff; --ink: #172033; --muted: #5b667a; --line: #dfe3ea;
+  --navy: #1e3a5e; --accent: #1f5fbf; --ok: #1d7a46; --warn: #a15c00; --plan: #6b7280; --code-bg: #eef1f6;
+  --sans: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif; --mono: "IBM Plex Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #10151f; --paper: #161d2a; --ink: #e6eaf2; --muted: #9aa5b8; --line: #2a3446; --navy: #9cc0ff; --accent: #7fb0ff; --ok: #5fd08f; --warn: #f0b45a; --plan: #9aa3b2; --code-bg: #1f2838; color-scheme: dark } }
+:root[data-theme="dark"] { --bg: #10151f; --paper: #161d2a; --ink: #e6eaf2; --muted: #9aa5b8; --line: #2a3446; --navy: #9cc0ff; --accent: #7fb0ff; --ok: #5fd08f; --warn: #f0b45a; --plan: #9aa3b2; --code-bg: #1f2838; color-scheme: dark }
+* { box-sizing: border-box }
+body { background: var(--bg); color: var(--ink); font: 15px/1.6 var(--sans); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)) }
+.wrap { max-width: 1180px; margin: 0 auto; display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 32px; padding-block: 28px 60px }
+@media (max-width: 900px) { .wrap { grid-template-columns: minmax(0, 1fr) } nav.toc { position: static !important; max-height: none !important } }
+nav.toc { position: sticky; top: calc(16px + env(safe-area-inset-top, 0px)); align-self: start; max-height: calc(100vh - 32px); overflow: auto; font-size: 13.5px }
+nav.toc b { display: block; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px }
+nav.toc a { display: block; padding: 4px 8px; border-radius: 6px; color: var(--ink); text-decoration: none }
+nav.toc a:hover, nav.toc a:focus-visible { background: var(--code-bg); outline: none }
+nav.toc a code { color: var(--muted); font-size: 11.5px }
+main { min-width: 0 }
+header.doc { border-bottom: 2px solid var(--navy); padding-bottom: 14px; margin-bottom: 8px }
+header.doc .kicker { font: 500 12px var(--mono); color: var(--muted); letter-spacing: .04em }
+h1 { font-size: 30px; line-height: 1.2; margin: 6px 0 8px; text-wrap: balance; color: var(--navy) }
+h2 { font-size: 23px; margin: 0; text-wrap: balance; color: var(--navy) }
+h3 { font-size: 16px; margin: 26px 0 8px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted) }
+p { max-width: 75ch; margin: 8px 0 }
+section.mod { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 22px 26px; margin-top: 26px; scroll-margin-top: 16px }
+@media (max-width: 600px) { section.mod { padding: 16px } }
+.modhead { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: baseline; border-bottom: 1px solid var(--line); padding-bottom: 10px }
+.modhead code { font: 500 13px var(--mono); color: var(--muted) }
+.summary { background: var(--code-bg); border-radius: 8px; padding: 12px 14px; margin-top: 12px }
+.tw { overflow-x: auto; margin: 8px 0 }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; min-width: 620px }
+th, td { text-align: left; vertical-align: top; padding: 7px 9px; border-bottom: 1px solid var(--line) }
+th { font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); background: var(--code-bg) }
+td.id, td.st { white-space: nowrap; font-family: var(--mono); font-size: 12.5px }
+td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap }
+.ok { color: var(--ok); font-weight: 600 } .part { color: var(--warn); font-weight: 600 } .plan { color: var(--plan); font-weight: 600 }
+code, .mono { font-family: var(--mono); font-size: .92em }
+.us { border-left: 3px solid var(--line); padding: 2px 0 2px 14px; margin: 14px 0 }
+.us b.t { display: block } .us .as { color: var(--muted); font-style: italic; margin: 2px 0 4px }
+.us ul, ul.plain { margin: 4px 0; padding-left: 20px } .us li, ul.plain li { margin: 3px 0 }
+figure { margin: 12px 0; } figure img { display: block; max-width: 100%; border: 1px solid var(--line); border-radius: 8px }
+figcaption { font-size: 12.5px; color: var(--muted); margin-top: 4px; font-family: var(--mono) }
+.shots { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 14px }
+.shots figure { margin: 0; min-width: 0 }
+pre.mermaid { background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 12px; overflow-x: auto; margin: 8px 0 }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--muted) }
+.gap li { margin: 4px 0 }
+.flow { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 13px; margin: 10px 0 }
+.flow span { background: var(--code-bg); border: 1px solid var(--line); border-radius: 6px; padding: 4px 8px }
+.flow i { color: var(--muted); font-style: normal }
+a { color: var(--accent) }
+</style>
+
+<style>.warnbox{border:1px solid var(--warn);border-left-width:4px;border-radius:8px;padding:10px 14px;margin:12px 0;background:var(--paper)}.warnbox b{color:var(--warn)}</style>
+<div class="wrap">
+<nav class="toc" aria-label="Contents">
+  <b>Order-to-Cash</b>
+  <a href="#o2c-00"><code>O2C-00</code> Overview</a>
+  <a href="#o2c-01"><code>O2C-01</code> Customers</a>
+  <a href="#o2c-02"><code>O2C-02</code> Sales contract (NOSPA)</a>
+  <a href="#o2c-03"><code>O2C-03</code> Deposit invoices</a>
+  <a href="#o2c-04"><code>O2C-04</code> Sales orders</a>
+  <a href="#o2c-05"><code>O2C-05</code> Sales invoices</a>
+  <a href="#o2c-06"><code>O2C-06</code> Collections</a>
+  <a href="#o2c-07"><code>O2C-07</code> Receivables reports</a>
+  <a href="#o2c-99"><code>O2C-99</code> Findings and open items</a>
+  <b style="margin-top:14px">Other volumes</b>
+  <a href="https://claude.ai/artifact/Gd5GYsHY6Ar78LJ4HLP2n2">Procure-to-Pay</a>
+</nav>
+<main>
+<header class="doc">
+  <div class="kicker">LEONIO ERP · DOCUMENTATION · ORDER-TO-CASH · v0.17 · 9 Nov 2026</div>
+  <h1>Leonio ERP – Order-to-Cash</h1>
+  <p>How the ERP sells ore and collects the money: from the sales contract (NOSPA) through deposit invoices, loading, the sales order and the final invoice to the buyer's payments. Same form as the Procure-to-Pay volume. Screens and figures come from a sample export sale run in company LAMI: <b>NOSPA-2026-001</b>, 50,000 WMT nickel ore to Fortune Metals Pte. Ltd. at USD 38/WMT, sample rate ₱58.50 per USD.</p>
+  <div class="legend"><span><span class="ok">✔ Built</span> works and tested</span><span><span class="part">◐ Partial</span> works with limits noted</span><span><span class="plan">○ Planned</span> in the backlog</span><span>Roles: permission area and action in Roles &amp; Permissions (V view, C create, D delete, A approve, P post)</span></div>
+</header>
+
+<!-- O2C-00 -->
+<section class="mod" id="o2c-00">
+  <div class="modhead"><code>LEO-O2C-00</code><h2>Overview: the whole chain</h2></div>
+  <div class="summary"><b>Summary:</b> The sales contract holds every commercial term. Contract milestones (notarised, Laycan confirmed, vessel confirmed) make the deposits due; each deposit is a sales invoice booked as an advance from the customer. After loading, the contract creates the sales order, and the invoice made from that order is the final invoice: it bills the loaded quantity and deducts the posted deposits. Collections are cash receipts applied to the invoices.</div>
+  <div class="flow"><span>Sales contract<br><code>NOSPA-YYYY-###</code></span><i>→</i><span>Deposit invoices<br><code>BI-#######</code></span><i>→</i><span>Collections<br><code>JCR#####</code></span><i>→</i><span>Loading<br>B/L, WMT</span><i>→</i><span>Sales order<br><code>SOR#####</code></span><i>→</i><span>Final invoice<br><code>BI-#######</code></span><i>→</i><span>Collection<br><code>JCR#####</code></span></div>
+  <h3>The sample, document by document</h3>
+  <div class="tw"><table><thead><tr><th>Step</th><th>Document</th><th>By</th><th class="num">USD</th><th class="num">₱ (58.50)</th></tr></thead><tbody>
+    <tr><td>Contract, approved, signed, notarised</td><td>NOSPA-2026-001</td><td>Commercial Manager; President approves</td><td class="num">1,900,000.00</td><td class="num">111,150,000.00</td></tr>
+    <tr><td>Deposit 1 (20%, due when notarised)</td><td>BI-0000001</td><td>Billing; Accounting Manager approves</td><td class="num">380,000.00</td><td class="num">22,230,000.00</td></tr>
+    <tr><td>Deposit 1 received (BDO-002, USD)</td><td>JCR00002</td><td>Treasury Supervisor; Treasury Asst. Manager approves</td><td class="num">380,000.00</td><td class="num">22,230,000.00</td></tr>
+    <tr><td>Deposit 2 (30%, due when Laycan confirmed)</td><td>BI-0000002 / JCR00003</td><td>same</td><td class="num">570,000.00</td><td class="num">33,345,000.00</td></tr>
+    <tr><td>Vessel MV Ocean Pride confirmed; 49,200 WMT loaded</td><td>NOSPA-2026-001</td><td>Commercial Manager</td><td></td><td></td></tr>
+    <tr><td>Sales order from the contract (released)</td><td>SOR00001</td><td>Billing</td><td class="num">1,869,600.00</td><td></td></tr>
+    <tr><td>Final invoice 49,200 × 38, deposits deducted</td><td>BI-0000003</td><td>Billing; Accounting Manager approves</td><td class="num">1,869,600.00</td><td class="num">109,371,600.00</td></tr>
+    <tr><td>Balance received</td><td>JCR00004</td><td>Treasury</td><td class="num">919,600.00</td><td class="num">53,796,600.00</td></tr>
+    <tr><td>Contract closed</td><td>NOSPA-2026-001</td><td>Commercial Manager</td><td class="num">balance 0.00</td><td></td></tr>
+  </tbody></table></div>
+  <h3>Approval chains in use</h3>
+  <div class="tw"><table><thead><tr><th>Document</th><th>Steps</th></tr></thead><tbody>
+    <tr><td>Sales contract (NOSPA) and its amendments</td><td>President</td></tr>
+    <tr><td>Sales order</td><td>none: released when sent (add steps in the Approval Designer if needed)</td></tr>
+    <tr><td>Sales invoice (deposit, final, other)</td><td>Accounting Manager – Shared Service</td></tr>
+    <tr><td>Sales credit memo</td><td>Accounting Manager – Shared Service</td></tr>
+    <tr><td>Cash receipt (collection)</td><td>Treasury Assistant Manager</td></tr>
+    <tr><td>New customer card</td><td>ICT Head, Accounting Manager – Shared Service</td></tr>
+  </tbody></table></div>
+</section>
+
+<!-- O2C-01 -->
+<section class="mod" id="o2c-01">
+  <div class="modhead"><code>LEO-O2C-01</code><h2>Customers</h2></div>
+  <div class="summary"><b>Summary:</b> The customer card carries the buyer's posting groups (domestic or foreign), VAT and withholding groups, currency, payment terms and TIN. New customers get their number from the customer series (Domestic <code>MDB-CU…</code>, Foreign <code>MFB-CU…</code>, Non-trade <code>ARNT-…</code>, AR Others <code>AROTH-CU…</code>) and need approval. The card shows the customer ledger.</div>
+  <h3>Screens</h3>
+  <div class="shots"><figure><img src="shots/o06-customer.png" alt="Customer card of Fortune Metals with ledger entries"><figcaption>Customer card MFB-CU00003 with its ledger entries</figcaption></figure></div>
+  <h3>Function list</h3>
+  <div class="tw"><table><thead><tr><th>#</th><th>Function</th><th>Screen</th><th>Roles</th><th>Status</th></tr></thead><tbody>
+    <tr><td class="id">F-01-01</td><td>Customer card with number series, TIN duplicate check, approval of new customers</td><td>Sales → Customers</td><td>customers C; approvers customers A</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-01-02</td><td>Customer ledger on the card; apply entries</td><td>Customer card</td><td>customers V; cr P</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-01-03</td><td>Approval of customer bank-detail changes (as for vendors)</td><td>—</td><td>—</td><td class="plan">○</td></tr>
+    <tr><td class="id">F-01-04</td><td>Credit limit check on orders and invoices</td><td>—</td><td>—</td><td class="plan">○</td></tr>
+  </tbody></table></div>
+</section>
+
+<!-- O2C-02 -->
+<section class="mod" id="o2c-02">
+  <div class="modhead"><code>LEO-O2C-02</code><h2>Sales contract (NOSPA)</h2></div>
+  <div class="summary"><b>Summary:</b> One record for the Nickel Ore Sale and Purchase Agreement: buyer, contract no., commodity and grade, volume and tolerance, price per WMT and currency, ports, Laycan, shipment no., the seller's bank account and the deposit schedule. It is drafted by the Commercial Manager, approved by the President, then moves through its milestones (signed, notarised, Laycan, vessel, loaded, closed). Changes after approval go through an amendment that is approved again.</div>
+  <h3>Screens</h3>
+  <div class="shots">
+    <figure><img src="shots/o01-contract.png" alt="Sales contract NOSPA-2026-001 with deposit schedule, settlement and progress"><figcaption>NOSPA-2026-001: deposit schedule, settlement, progress, history</figcaption></figure>
+    <figure><img src="shots/o01-contracts.png" alt="Sales contracts list"><figcaption>Sales → Sales Contracts (NOSPA)</figcaption></figure>
+  </div>
+  <h3>Function list</h3>
+  <div class="tw"><table><thead><tr><th>#</th><th>Function</th><th>Screen</th><th>Roles</th><th>Status</th></tr></thead><tbody>
+    <tr><td class="id">F-02-01</td><td>Draft the contract: buyer, commodity (WMT items), grade, volume ± tolerance, currency, price, ports, Laycan, shipment no., seller bank</td><td>Sales → Sales Contracts → New</td><td>Commercial Manager</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-02-02</td><td>Deposit schedule: Deposit 1 / Deposit 2 / Provisional, % of value or fixed amount, trigger milestone, days to pay</td><td>Contract page</td><td>Commercial Manager</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-02-03</td><td>Approve / reject</td><td>Contract page / Requests to Approve</td><td>President (nospa A)</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-02-04</td><td>Milestones: buyer signature, notarisation (Active), Laycan, vessel, loading (B/L date, WMT), close</td><td>Contract page</td><td>Commercial Manager</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-02-05</td><td>Amendment with letter no. and reason, approved again; change list kept</td><td>Contract page → Amend</td><td>Commercial Manager; President</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-02-06</td><td>Settlement: charges, deposits invoiced and collected, balance to collect or refund</td><td>Contract page</td><td>nospa V</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-02-07</td><td>Final payment documents checklist (surveyor invoice, COW, COQ, laytime, FIC)</td><td>Contract page</td><td>nospa C</td><td class="part">◐ ticked by hand; not required before the final invoice</td></tr>
+    <tr><td class="id">F-02-08</td><td>Price adjustment for grade and moisture computed from the COQ</td><td>—</td><td>—</td><td class="plan">○ terms are text; adjust the invoice price by hand</td></tr>
+  </tbody></table></div>
+  <h3>User stories</h3>
+  <div class="us"><b class="t">US-02-01 · Record the contract once</b><div class="as">As the Commercial Manager, I want the NOSPA terms in one record, so that every invoice reads the same terms.</div><ul>
+    <li>Required: contract no. (unique per company), date, buyer, commodity, volume above 0, currency, price above 0, at least one deposit.</li>
+    <li>Contract value = volume × price. Deposits may not add up to more than the value. Laycan "to" may not be before "from".</li>
+    <li>The seller bank must be in the contract currency (a USD contract needs a USD account such as BDO-002).</li>
+    <li>Number <code>NOSPA-YYYY-###</code>. The shipment no. becomes the SHIPMENT NUMBER dimension on every invoice.</li></ul></div>
+  <div class="us"><b class="t">US-02-02 · Know when each deposit is due</b><div class="as">As Accounting, I want the ERP to tell me when to bill a deposit.</div><ul>
+    <li>Deposit status: Not yet due → Due (its milestone is recorded; due date = milestone date + days) → Invoice draft / pending / approved → Invoiced → Partly paid → Paid.</li>
+    <li>Default triggers: Deposit 1 when notarised, Deposit 2 when the Laycan is confirmed, Provisional when the vessel is confirmed.</li></ul></div>
+  <div class="us"><b class="t">US-02-03 · Amend a signed contract</b><div class="as">As the Commercial Manager, I want changes approved and on record.</div><ul>
+    <li>After approval only grade, volume, price, ports, shipment, Laycan, bank and deposits can change, and only through an amendment with a reason (and letter no.).</li>
+    <li>The amendment is approved like the contract; the person who submitted it cannot approve it. Rejected amendments leave the contract unchanged.</li></ul></div>
+  <h3>Status flow</h3>
+  <pre class="mermaid">stateDiagram-v2
+  [*] --> Draft
+  Draft --> PendingApproval: Submit
+  PendingApproval --> Approved: President
+  PendingApproval --> Draft: rejected
+  Approved --> Signed: buyer signs
+  Signed --> Active: notarised (Deposit 1 due)
+  Active --> Active: Laycan (Deposit 2 due), vessel, loading
+  Active --> Closed: final invoice settled
+  Draft --> Cancelled
+  Active --> Cancelled</pre>
+  <h3>Accounting</h3><p>None on the contract itself.</p>
+</section>
+
+<!-- O2C-03 -->
+<section class="mod" id="o2c-03">
+  <div class="modhead"><code>LEO-O2C-03</code><h2>Deposit invoices</h2></div>
+  <div class="summary"><b>Summary:</b> When a deposit is due, Billing creates its invoice from the contract with one click. It is a sales invoice booked to the Sales Prepayments account (Advances from Customers, 2124080 in the Mining setup), as Business Central's prepayment invoices are, approved by the Accounting Manager and collected through a cash receipt. The final invoice deducts it.</div>
+  <h3>Screens</h3>
+  <div class="shots"><figure><img src="shots/o02-deposit-inv.png" alt="Deposit 1 invoice BI-0000001"><figcaption>BI-0000001, Deposit 1 (20%), USD 380,000</figcaption></figure></div>
+  <h3>Function list</h3>
+  <div class="tw"><table><thead><tr><th>#</th><th>Function</th><th>Screen</th><th>Roles</th><th>Status</th></tr></thead><tbody>
+    <tr><td class="id">F-03-01</td><td>Create the deposit invoice from a due deposit (one per deposit)</td><td>Contract → Deposit schedule</td><td>Billing / GA Supervisor / Acctg Manager</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-03-02</td><td>VAT from the "Contract Deposit – Foreign / Local" item (zero for foreign buyers)</td><td>automatic</td><td>—</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-03-03</td><td>Approve and post; due date from the deposit schedule</td><td>Sales invoice page</td><td>si A, si P</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-03-04</td><td>Print as pro forma invoice for the buyer</td><td>Sales invoice → Print</td><td>si V</td><td class="part">◐ standard invoice print</td></tr>
+  </tbody></table></div>
+  <h3>Accounting entries (BI-0000001, USD 380,000 at 58.50)</h3>
+  <div class="tw"><table><thead><tr><th>Line</th><th>Account (LAMI)</th><th class="num">Debit ₱</th><th class="num">Credit ₱</th></tr></thead><tbody>
+    <tr><td>Receivable from the buyer</td><td><code>1120010</code> Accounts Receivable – Trade</td><td class="num">22,230,000.00</td><td></td></tr>
+    <tr><td>Advance from the customer</td><td><code>2124080</code> Advances from Customers</td><td></td><td class="num">22,230,000.00</td></tr></tbody></table></div>
+</section>
+
+<!-- O2C-04 -->
+<section class="mod" id="o2c-04">
+  <div class="modhead"><code>LEO-O2C-04</code><h2>Sales orders</h2></div>
+  <div class="summary"><b>Summary:</b> A sales order is the customer's order for ore, fuel, equipment rental or services. Once released, invoices are created from it in full or in parts; the quantity invoiced is tracked per line and the order is Completed when everything is billed. For ore, the contract creates the order after loading with the loaded quantity, and the invoice made from it is the final invoice.</div>
+  <h3>Screens</h3>
+  <div class="shots"><figure><img src="shots/o03-so.png" alt="Sales order SOR00001 completed"><figcaption>SOR00001 from NOSPA-2026-001, Completed</figcaption></figure></div>
+  <h3>Function list</h3>
+  <div class="tw"><table><thead><tr><th>#</th><th>Function</th><th>Screen</th><th>Roles</th><th>Status</th></tr></thead><tbody>
+    <tr><td class="id">F-04-01</td><td>Create Sales Order from the contract after loading (loaded WMT × contract price)</td><td>Contract page</td><td>Billing / Commercial Manager</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-04-02</td><td>Sales order for other sales (fuel, rentals, services) with lines, currency, location, terms</td><td>Sales → Sales Orders → New</td><td>so C</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-04-03</td><td>Release (approval if rules exist)</td><td>SO page</td><td>so C / so A</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-04-04</td><td>Create Sales Invoice for the quantity still to invoice; lower it to invoice part now</td><td>SO page</td><td>si C</td><td class="ok">✔</td></tr>
+  </tbody></table></div>
+  <h3>User stories</h3>
+  <div class="us"><b class="t">US-04-01 · Invoice in parts</b><div class="as">As Billing, I want to bill an order in several invoices without billing too much.</div><ul>
+    <li>Only one open (unposted) invoice per order at a time. An invoice line may not exceed the quantity still to invoice.</li>
+    <li>Posting adds to Quantity Invoiced; the order becomes Partially Invoiced, then Completed. No 50 WMT per-invoice limit (decision 21).</li></ul></div>
+  <h3>Status flow</h3>
+  <pre class="mermaid">stateDiagram-v2
+  [*] --> Draft
+  Draft --> Approved: Send (released; no steps today)
+  Approved --> PartiallyInvoiced: part posted
+  Approved --> Completed: all posted
+  PartiallyInvoiced --> Completed</pre>
+</section>
+
+<!-- O2C-05 -->
+<section class="mod" id="o2c-05">
+  <div class="modhead"><code>LEO-O2C-05</code><h2>Sales invoices and credit memos</h2></div>
+  <div class="summary"><b>Summary:</b> Sales invoices bill items, services or G/L lines with VAT. Posting books the receivable, the sale, output VAT and, for stock items, the cost of sales out of inventory. An invoice made from a contract's sales order is the final invoice: posting also reverses each posted deposit from Advances from Customers against the receivable, so only the balance remains open. Credit memos reverse invoices.</div>
+  <h3>Screens</h3>
+  <div class="shots">
+    <figure><img src="shots/o04-final-inv.png" alt="Final invoice BI-0000003"><figcaption>BI-0000003, final invoice, deposits deducted on posting</figcaption></figure>
+    <figure><img src="shots/o04-si-list.png" alt="Sales invoice list"><figcaption>Sales → Sales Invoices</figcaption></figure>
+  </div>
+  <h3>Function list</h3>
+  <div class="tw"><table><thead><tr><th>#</th><th>Function</th><th>Screen</th><th>Roles</th><th>Status</th></tr></thead><tbody>
+    <tr><td class="id">F-05-01</td><td>Sales invoice with item, service, G/L and fixed asset lines; VAT by posting setup; foreign currency</td><td>Sales → Sales Invoices</td><td>si C</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-05-02</td><td>Final invoice deducts every posted deposit invoice of the contract</td><td>automatic on posting</td><td>si P</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-05-03</td><td>Approve, post; cost of sales from inventory (average / FIFO per item)</td><td>Sales invoice page</td><td>si A, si P</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-05-04</td><td>Sales credit memo</td><td>Sales → Sales Credit Memos</td><td>si C P</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-05-05</td><td>Intercompany: a sales invoice to an affiliate sends a purchase invoice to its inbox</td><td>Intercompany</td><td>ic C P</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-05-06</td><td>BIR-registered invoice series and invoice print (CAS)</td><td>—</td><td>—</td><td class="plan">○</td></tr>
+  </tbody></table></div>
+  <h3>Accounting entries (BI-0000003, USD 1,869,600 at 58.50)</h3>
+  <div class="tw"><table><thead><tr><th>Line</th><th>Account (LAMI)</th><th class="num">Debit ₱</th><th class="num">Credit ₱</th></tr></thead><tbody>
+    <tr><td>Receivable from the buyer</td><td><code>1120010</code> Accounts Receivable – Trade</td><td class="num">109,371,600.01</td><td></td></tr>
+    <tr><td>Sale of nickel ore</td><td><code>4110110</code> Sales (General Posting Setup FOREIGN × NICKEL)</td><td></td><td class="num">97,653,214.04</td></tr>
+    <tr><td>Output VAT 12% (see finding O2C-99)</td><td><code>2122110</code> Output VAT</td><td></td><td class="num">11,718,385.97</td></tr>
+    <tr><td>Cost of the ore sold (49,200 WMT)</td><td><code>5410010</code> Cost of Sales</td><td class="num">59,040,000.00</td><td></td></tr>
+    <tr><td>Ore out of inventory</td><td><code>1131100</code> Inventory – ore</td><td></td><td class="num">59,040,000.00</td></tr>
+    <tr><td>Deduct Deposit 1 (BI-0000001)</td><td><code>2124080</code> Advances from Customers / <code>1120010</code> AR</td><td class="num">22,230,000.00</td><td class="num">22,230,000.00</td></tr>
+    <tr><td>Deduct Deposit 2 (BI-0000002)</td><td><code>2124080</code> Advances from Customers / <code>1120010</code> AR</td><td class="num">33,345,000.00</td><td class="num">33,345,000.00</td></tr></tbody></table></div>
+  <p>Open balance on the buyer after posting: USD 919,600 (1,869,600 − 380,000 − 570,000).</p>
+</section>
+
+<!-- O2C-06 -->
+<section class="mod" id="o2c-06">
+  <div class="modhead"><code>LEO-O2C-06</code><h2>Collections (Cash Receipt Journal)</h2></div>
+  <div class="summary"><b>Summary:</b> Treasury records each payment received as a cash receipt: customer, bank account, method, official receipt no., amount, applied to the open invoices. Creditable withholding tax withheld by a domestic customer is booked with it. Approved by the Treasury Assistant Manager, then posted. Money that is not applied stays open as a customer deposit; deposits found on the bank statement can be turned into a draft cash receipt from the statement import.</div>
+  <h3>Screens</h3>
+  <div class="shots">
+    <figure><img src="shots/o05-cr.png" alt="Cash receipt JCR00002 for Deposit 1"><figcaption>JCR00002, Deposit 1 received into BDO-002 (USD)</figcaption></figure>
+    <figure><img src="shots/o05-cr-final.png" alt="Cash receipt JCR00004 for the final balance"><figcaption>JCR00004, final balance USD 919,600</figcaption></figure>
+  </div>
+  <h3>Function list</h3>
+  <div class="tw"><table><thead><tr><th>#</th><th>Function</th><th>Screen</th><th>Roles</th><th>Status</th></tr></thead><tbody>
+    <tr><td class="id">F-06-01</td><td>Cash receipt: customer, bank, method, O.R. no., amount, apply entries</td><td>Treasury → Cash Receipt Journals</td><td>cr C</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-06-02</td><td>Creditable withholding tax (CWT) by WHT product group</td><td>Cash receipt page</td><td>cr C</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-06-03</td><td>Approve, post; realized exchange gain / loss for foreign currency</td><td>Cash receipt page</td><td>cr A, cr P</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-06-04</td><td>Customer deposit (unapplied), apply later, unapply, customer refund</td><td>Cash receipt page</td><td>cr P</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-06-05</td><td>Unidentified bank deposit → draft cash receipt from the bank statement</td><td>Treasury → Bank Statement Import</td><td>bank C</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-06-06</td><td>Record the 2307 certificates received from customers (for the SAWT)</td><td>—</td><td>—</td><td class="plan">○</td></tr>
+  </tbody></table></div>
+  <h3>User stories</h3>
+  <div class="us"><b class="t">US-06-01 · Record a buyer's payment</b><div class="as">As Treasury, I want to record each payment against the right invoices.</div><ul>
+    <li>O.R. no. and amount are required. Amount received + CWT may not be less than the total applied; applied amounts may not exceed an invoice's remaining amount; currencies must match.</li>
+    <li>Receivables are cleared at the rate each invoice was booked at; any difference to the receipt date's rate goes to realized exchange gain or loss.</li>
+    <li>The bank entry feeds the bank reconciliation and the daily cash position.</li></ul></div>
+  <h3>Accounting entries (JCR00004, USD 919,600 at 58.50)</h3>
+  <div class="tw"><table><thead><tr><th>Line</th><th>Account (LAMI)</th><th class="num">Debit ₱</th><th class="num">Credit ₱</th></tr></thead><tbody>
+    <tr><td>Bank BDO-002 (USD)</td><td><code>1110012</code> Cash in Bank – USD</td><td class="num">53,796,600.00</td><td></td></tr>
+    <tr><td>Clear the receivable</td><td><code>1120010</code> Accounts Receivable – Trade</td><td></td><td class="num">53,796,600.00</td></tr></tbody></table></div>
+  <p>A domestic customer that withholds 1% or 2% adds a debit to the prepaid (creditable) withholding tax account of the WHT Posting Setup.</p>
+</section>
+
+<!-- O2C-07 -->
+<section class="mod" id="o2c-07">
+  <div class="modhead"><code>LEO-O2C-07</code><h2>Receivables reports</h2></div>
+  <div class="summary"><b>Summary:</b> Aged Accounts Receivable by customer (not due, 1–30, 31–60, 61–90, over 90 days), the customer ledger on each customer card, and the settlement panel on each sales contract.</div>
+  <h3>Screens</h3>
+  <div class="shots"><figure><img src="shots/o06-aging.png" alt="Aged accounts receivable"><figcaption>Reports → Aged Accounts Receivable</figcaption></figure></div>
+  <div class="tw"><table><thead><tr><th>#</th><th>Function</th><th>Screen</th><th>Roles</th><th>Status</th></tr></thead><tbody>
+    <tr><td class="id">F-07-01</td><td>Aged Accounts Receivable, all companies or one; Excel export</td><td>Reports → Aged Accounts Receivable</td><td>reports V</td><td class="ok">✔</td></tr>
+    <tr><td class="id">F-07-02</td><td>Statement of account to send to the customer</td><td>—</td><td>—</td><td class="plan">○</td></tr>
+    <tr><td class="id">F-07-03</td><td>Sales per shipment / contract report (WMT, USD, deposits, balance)</td><td>—</td><td>—</td><td class="plan">○</td></tr>
+  </tbody></table></div>
+</section>
+
+<!-- O2C-99 -->
+<section class="mod" id="o2c-99">
+  <div class="modhead"><code>LEO-O2C-99</code><h2>Findings and open items (as of v0.17)</h2></div>
+  <div class="warnbox"><b>Setup finding: the export sale took 12% output VAT.</b> In the VAT Posting Setup imported from Business Central, buyer group <code>0VAT</code> × item group <code>12GVAT</code> (the nickel item) is 12%. Zero-rating only applies with item groups <code>0GVAT</code> / <code>0SVAT</code>. In addition, the buyer's card has "Prices Including VAT" ticked, so USD 38/WMT was treated as including VAT and revenue came out ₱97.65M instead of ₱109.37M. The ERP applied the setup as given. Accounting should decide: zero-rated VAT group on export invoices (or on the ore item for foreign buyers), and untick "Prices Including VAT" for foreign buyers. The sample invoice BI-0000003 was left as posted.</div>
+  <ul class="gap">
+    <li><b>Ore production is not in the ERP.</b> Stock for the sample was put in with an item journal (JIT00001, 50,000 WMT at a sample cost of ₱1,200/WMT). Mining production and hauling to the port yard are planned under the BU modules.</li>
+    <li><b>Ore stock adjustments have no P&amp;L effect.</b> The Inventory Adjmt. account for nickel ore is the inventory account itself (1131100).</li>
+    <li><b>The USD rate is a sample</b> (₱58.50 from 1 Nov 2026), entered for this documentation. Enter real rates under Finance → Currency Exchange Rates.</li>
+    <li><b>Final payment documents</b> (COW, COQ, surveyor invoice, laytime, FIC) are a checklist only; the final invoice can be made without them.</li>
+    <li><b>Grade and moisture price adjustments</b> are written as text on the contract and applied by hand on the invoice.</li>
+    <li><b>Not built yet:</b> customer bank-change approval, credit limits, statement of account, BIR-registered invoice series and print, 2307 received from customers (SAWT), file attachments, logins.</li>
+  </ul>
+</section>
+</main>
+</div>

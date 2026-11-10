@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Leonio Group ERP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=0.17.2">
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <svg class="brand-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/></svg>
+        <div class="brand-text"><strong>Leonio ERP</strong><small>v0.17 · Enterprise Resource Planning</small></div>
+      </div>
+      <nav id="nav"></nav>
+    </aside>
+    <div class="maincol">
+      <header class="topbar">
+        <div class="top-title" id="toptitle"></div>
+        <div class="top-ctl">
+          <label>Company <select id="co" onchange="switchCompany(this.value)"></select></label>
+          <label>Acting as <select id="usr" onchange="switchUser(this.value)"></select></label>
+          <span id="mode" class="mode"></span>
+        </div>
+      </header>
+      <main id="main"><div class="card">Loading…</div></main>
+    </div>
+  </div>
+  <div id="modal" class="modal"></div>
+  <div id="toasts"></div>
+  <div id="dls" hidden></div>
+  <script src="js/core.js?v=0.17.2"></script>
+  <script src="js/xlsx.js?v=0.17.2"></script>
+  <script src="js/bcimport.js?v=0.17.2"></script>
+  <script src="js/data.js?v=0.17.2"></script>
+  <script src="js/engine.js?v=0.17.2"></script>
+  <script src="js/docs.js?v=0.17.2"></script>
+  <script src="js/pages.js?v=0.17.2"></script>
+  <script src="js/warehouse.js?v=0.17.2"></script>
+  <script src="js/treasury.js?v=0.17.2"></script>
+  <script src="js/intercompany.js?v=0.17.2"></script>
+  <script src="js/fx.js?v=0.17.2"></script>
+  <script src="js/recon.js?v=0.17.2"></script>
+  <script src="js/mdcheck.js?v=0.17.2"></script>
+  <script src="js/ers.js?v=0.17.2"></script>
+  <script src="js/nospa.js?v=0.17.2"></script>
+  <script src="js/nospa-billing.js?v=0.17.2"></script>
+  <script src="js/so.js?v=0.17.2"></script>
+  <script src="js/vendacc.js?v=0.17.2"></script>
+  <script src="js/rfq.js?v=0.17.2"></script>
+  <script src="js/qar.js?v=0.17.2"></script>
+  <script src="js/asr.js?v=0.17.2"></script>
+  <script src="js/cash.js?v=0.17.2"></script>
+  <script src="js/bir.js?v=0.17.2"></script>
+  <script src="js/approvals.js?v=0.17.2"></script>
+  <script src="js/itemdesc.js?v=0.17.2"></script>
+  <script src="js/numbering.js?v=0.17.2"></script>
+  <script src="js/main.js?v=0.17.2"></script>
+  <script src="js/roles.js?v=0.17.2"></script>
+</body>
+</html>

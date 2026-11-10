@@ -1,0 +1,38 @@
+LEONIO GROUP ERP - Prototype v0.6 (Business Central aligned: warehouse, treasury, intercompany, foreign currency)
+========================================================================
+
+HOW TO START
+1. Double-click "Start ERP.bat".
+2. A black window opens (the server) and your browser opens the ERP.
+   Keep the black window open while you use the ERP. Close it to stop.
+   If the browser does not open, go to http://localhost:8080
+   The first start takes a few seconds (it loads your master data).
+
+WHAT IS INSIDE
+- Your Business Central master files (Land, Mining, Tankering) are already
+  loaded: chart of accounts, posting groups, VAT/WHT setup, vendors,
+  customers, items, locations, bins, dimensions, number series, fixed assets.
+- Postings work like Business Central: every G/L account comes from the
+  posting setup (General Posting Setup, Inventory/Vendor/Customer/Bank/FA
+  Posting Groups, VAT Posting Setup, WHT Posting Setup).
+- LLRI and LAMI share the Mining setup. Admin also uses Mining for now
+  (no Admin master file was provided).
+
+WHERE IS MY DATA?
+- "data\md.json"  = master data (large, saved only when masters change)
+- "data\db.json"  = transactions and settings
+- Hourly backups in "data\backups". Copy the whole folder to keep your work.
+
+FIRST STEPS
+- "Getting Started" (left menu): a full purchase, step by step.
+- "ERP Project > Flow <-> BC Reconciliation": each signed To-Be step, the
+  Business Central function it uses, and how this ERP does it.
+- "Administration > Master Data Check": problems found in the master files
+  (things BC would also refuse at posting time).
+- "Administration > Import BC Configuration Packages": re-load updated
+  BC Excel files at any time.
+
+IMPORTANT
+This is a prototype for validating processes with the departments.
+It has no passwords yet. Do not use it for official books until the items
+on the Roadmap page under "Go-live readiness" are done.

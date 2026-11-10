@@ -1,0 +1,17 @@
+f01.xlsx = Leonio_Bank_Mining_Final_version3.0.xlsx
+f02.xlsx = Leonio_Cash_Mining Group_Currency_Final_version2.0.xlsx
+f03.xlsx = Leonio_Chart of Accounts and Dimensions_Mining_Final_version5.8.xlsx
+f04.xlsx = Leonio_Customer_Final_Miningv3.3.xlsx
+f05.xlsx = Leonio_Fixed Asset Posting and Employee Posting_Mining_Final_version3.31.xlsx
+f06.xlsx = Leonio_Fixed Asset_Mining_LAMI_Final_version3.6.xlsx
+f07.xlsx = Leonio_GEN POSTING_Mining_Final_version3.8.xlsx
+f08.xlsx = Leonio_General Journal Template_Mining_Final_version2.1.xlsx
+f09.xlsx = Leonio_Inventory_Mining_Final_v3.24.xlsx
+f10.xlsx = Leonio_Item Charge_Mining_Final_version2.0.xlsx
+f11.xlsx = Leonio_Location_Mining_Final_version3.5.xlsx
+f12.xlsx = Leonio_Number Series_Mining_Final_version3.11.xlsx
+f13.xlsx = Leonio_Physical Journal Template_Mining_Final_version3.2.xlsx
+f14.xlsx = Leonio_Purchasing_Mining_Final_Consolidated_version3.11.xlsx
+f15.xlsx = Leonio_VAT_Mining_Final_Revised_version2.4.xlsx
+f16.xlsx = Leonio_Vendor Bank_Mining_Final_Version3.0.xlsx
+f17.xlsx = Leonio_WHTAX_Mining_Final_version2.3.xlsx
